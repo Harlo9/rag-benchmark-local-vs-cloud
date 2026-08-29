@@ -1,0 +1,2 @@
+datasets==3.1.0
+tiktoken==0.8.0
