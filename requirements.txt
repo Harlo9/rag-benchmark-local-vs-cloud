@@ -4,3 +4,4 @@ ollama==0.4.4
 numpy==2.1.3
 python-dotenv==1.0.1
 rank-bm25==0.2.2
+sentence-transformers==3.3.1

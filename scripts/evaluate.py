@@ -33,6 +33,7 @@ RESULTS = ROOT / "results"
 DOC_K = 10      # documents evaluated per query
 CHUNK_K = 50    # chunks retrieved, before collapsing to documents
 STRATEGY = sys.argv[1] if len(sys.argv) > 1 else "dense"   # dense | bm25 | hybrid
+RERANK = len(sys.argv) > 2 and sys.argv[2] == "rerank"
 
 load_dotenv(ROOT / ".env")
 
@@ -69,7 +70,7 @@ def to_documents(hits, limit: int) -> list[str]:
 
 def main() -> None:
     embedder = get_embedder()
-    retriever = build_retriever(strategy=STRATEGY)
+    retriever = build_retriever(strategy=STRATEGY, rerank=RERANK)
     qrels, queries = load_qrels(), load_queries()
 
     # Only queries that have judgments can be scored.
@@ -93,6 +94,7 @@ def main() -> None:
             "strategy": STRATEGY,
             "embedder": embedder.name,
             "dim": embedder.dim,
+            "rerank": RERANK,
             "chunk_k": CHUNK_K,
             "doc_k": DOC_K,
             "queries": len(query_ids),
