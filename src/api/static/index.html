@@ -2,192 +2,762 @@
 <!--
   STEP 10 / 10: Demo interface.
 
-  Single file, no build step, no external requests: the project claims to run
-  fully offline, so the UI must too. Fonts are OS stacks for the same reason.
+  Single file, no build step, no CDN, no web fonts, no external request of any
+  kind: the project claims to run fully offline, so the page must too.
 
-  The interaction that matters is the citation link: clicking [n] in an answer
-  reveals the passage that supports it. Everything else stays quiet.
+  Design notes, so the next person does not undo them by accident:
+
+  - Palette is hematoxylin and eosin, the two stains behind most of the imagery
+    in this corpus. Eosin (the magenta) is spent on ONE thing: citation. If it
+    is on screen, it is about provenance. Nothing else gets to be loud.
+  - The answer is set in a geometric sans and the passages in a serif, not the
+    other way round. The answer is a machine readout; the passages are the
+    literature. The typography says which is which before you read a word.
+  - The evidence axis borrows the forest plot from systematic reviews: every
+    retrieved passage is a marker on a shared score track, so you can see the
+    gap between ranks and whether the cited passages are the strong ones.
+    Shape carries the cited/not distinction as well as colour.
+  - Clicking [n] in the answer opens the passage that supports it. Passages
+    start closed precisely so that the click has something to reveal.
 -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Local RAG</title>
+<title>Evidence reader</title>
 <style>
   :root {
-    --paper: #f5f6f4;
-    --ink: #14211f;
-    --muted: #6b7a77;
-    --line: #dcdfd9;
-    --evidence: #0f4c5c;
-    --mark: #c98a2b;
-    --serif: "Iowan Old Style", Palatino, Georgia, serif;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+    /* Slide glass, hematoxylin, eosin. */
+    --ground:   #e6e9f0;
+    --panel:    #f8f9fc;
+    --panel-hi: #ffffff;
+    --ink:      #171a35;
+    --ink-70:   #3d4265;
+    --ink-45:   #5d6383;
+    --rule:     #c9cfdf;
+    --rule-lo:  #dfe3ee;
+    --eosin:    #b21d5f;
+    --eosin-lo: #f6e3ec;
+
+    --display: "Avenir Next", Avenir, "Segoe UI", "Trebuchet MS", system-ui, sans-serif;
+    --serif: Charter, "Bitstream Charter", "Iowan Old Style", "Source Serif Pro", Georgia, serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, "Cascadia Mono", "Roboto Mono", monospace;
+
+    --sheet: 60rem;
   }
+
   * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
   body {
-    margin: 0; background: var(--paper); color: var(--ink);
-    font-family: var(--sans); line-height: 1.55;
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 16px;
+    line-height: 1.55;
   }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
 
-  header { border-bottom: 1px solid var(--line); padding-bottom: 1.25rem; }
-  h1 { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin: 0; }
-  .sub { color: var(--muted); font-size: .85rem; margin-top: .35rem; }
-
-  form { display: flex; gap: .5rem; margin: 1.75rem 0 .75rem; }
-  input {
-    flex: 1; padding: .7rem .85rem; border: 1px solid var(--line);
-    background: #fff; border-radius: 3px; font: inherit; color: inherit;
+  .sheet {
+    max-width: var(--sheet);
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 4rem;
   }
-  input:focus, button:focus-visible { outline: 2px solid var(--evidence); outline-offset: 1px; }
-  button {
-    padding: .7rem 1.1rem; border: 0; border-radius: 3px;
-    background: var(--evidence); color: #fff; font: inherit; cursor: pointer;
-  }
-  button:disabled { background: var(--muted); cursor: wait; }
 
-  .controls { display: flex; gap: 1rem; font-size: .8rem; color: var(--muted); }
-  .controls label { display: flex; align-items: center; gap: .35rem; }
-  select { font: inherit; border: 1px solid var(--line); background: #fff; border-radius: 3px; padding: .15rem; }
-
-  .answer {
-    font-family: var(--serif); font-size: 1.15rem; line-height: 1.7;
-    margin: 2.5rem 0 1rem; white-space: pre-wrap;
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
-  /* The signature element: a citation is a control, not decoration. */
+
+  :focus-visible {
+    outline: 2px solid var(--eosin);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* ---------------------------------------------------------- masthead --- */
+
+  .masthead {
+    display: flex; flex-wrap: wrap; gap: 1.5rem 2rem;
+    align-items: flex-end; justify-content: space-between;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .eyebrow {
+    margin: 0 0 .5rem;
+    font-family: var(--mono);
+    font-size: .7rem; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--ink-45);
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.6rem);
+    font-weight: 600; letter-spacing: -.02em; line-height: 1.05;
+  }
+  .facts {
+    margin: 0;
+    display: grid; grid-template-columns: auto 1fr; gap: .2rem .9rem;
+    font-family: var(--mono); font-size: .72rem; line-height: 1.5;
+    color: var(--ink-45);
+  }
+  .facts dt { letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+  .facts dd { margin: 0; color: var(--ink-70); }
+
+  /* ----------------------------------------------------------- console --- */
+
+  .console { margin: 1.75rem 0 2.25rem; }
+
+  form { display: flex; gap: .5rem; }
+
+  #q {
+    flex: 1; min-width: 0;
+    padding: .8rem .9rem;
+    font: inherit; font-size: 1rem; color: var(--ink);
+    background: var(--panel-hi);
+    border: 1px solid var(--rule);
+    border-bottom-width: 2px;
+    border-radius: 2px;
+  }
+  #q::placeholder { color: var(--ink-45); opacity: .8; }
+  #q:focus-visible { border-color: var(--eosin); }
+
+  #go {
+    padding: .8rem 1.4rem;
+    font: inherit; font-weight: 600; letter-spacing: .02em;
+    color: #fff; background: var(--ink);
+    border: 0; border-radius: 2px; cursor: pointer;
+  }
+  #go:hover { background: var(--eosin); }
+  #go[disabled] { background: var(--ink-45); cursor: progress; }
+
+  .knobs {
+    display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.25rem;
+    margin-top: .75rem;
+    font-family: var(--mono); font-size: .74rem; color: var(--ink-45);
+  }
+  .knobs label {
+    display: inline-flex; align-items: center; gap: .4rem;
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+  select {
+    font: inherit; font-size: .78rem; text-transform: none; letter-spacing: 0;
+    color: var(--ink); background: var(--panel-hi);
+    border: 1px solid var(--rule); border-radius: 2px;
+    padding: .2rem .3rem;
+  }
+  .measured { margin: 0; margin-left: auto; }
+  .measured b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* ------------------------------------------------------------ panels --- */
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 1.5rem;
+  }
+
+  .section-label {
+    display: flex; flex-wrap: wrap; gap: .4rem .9rem;
+    align-items: baseline; justify-content: space-between;
+    margin: 2rem 0 .7rem;
+    font-family: var(--mono); font-size: .7rem;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--ink-45);
+  }
+  .section-label span:last-child { letter-spacing: .06em; }
+
+  /* The readout: the machine speaking, in the machine's typeface. */
+  .readout {
+    font-size: clamp(1.05rem, .98rem + .35vw, 1.2rem);
+    line-height: 1.75; letter-spacing: -.005em;
+    white-space: pre-wrap;
+    margin: 0;
+    border-left: 2px solid var(--ink);
+    padding-left: 1.25rem;
+  }
+
   .cite {
-    font-family: var(--mono); font-size: .78em; color: var(--evidence);
-    background: #fff; border: 1px solid var(--line); border-radius: 3px;
-    padding: .05em .3em; cursor: pointer; vertical-align: .12em;
+    display: inline-block;
+    font-family: var(--mono); font-size: .68em; font-weight: 600;
+    line-height: 1.35; vertical-align: .18em;
+    color: var(--eosin); background: var(--panel-hi);
+    border: 1px solid var(--eosin); border-radius: 2px;
+    padding: 0 .32em; margin: 0 .06em;
+    cursor: pointer;
   }
-  .cite:hover { border-color: var(--mark); color: var(--mark); }
-
-  .abstained {
-    font-family: var(--sans); font-size: .95rem; color: var(--muted);
-    border-left: 2px solid var(--mark); padding-left: .9rem; margin: 2.5rem 0;
+  .cite:hover { color: var(--panel-hi); background: var(--eosin); }
+  .cite--broken {
+    color: var(--ink-45); border-color: var(--rule);
+    border-style: dashed; cursor: help;
+    text-decoration: line-through;
   }
 
-  /* Timings: retrieval and generation drawn to scale, because the whole project
-     is about making that trade-off visible. */
-  .timing { display: flex; height: 4px; margin: 1.5rem 0 .4rem; background: var(--line); }
-  .timing div:first-child { background: var(--evidence); }
-  .timing div:last-child { background: var(--mark); }
-  .timing-legend { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+  /* --------------------------------------------------------- abstained --- */
 
-  h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .09em;
-       color: var(--muted); font-weight: 600; margin: 2.5rem 0 .75rem; }
+  .abstain { border-left: 2px solid var(--eosin); }
+  .abstain h2 {
+    margin: 0 0 .5rem;
+    font-size: 1.3rem; font-weight: 600; letter-spacing: -.015em;
+  }
+  /* Direct children only: the latency legend below must keep its own type. */
+  .abstain > p { margin: 0; max-width: 62ch; color: var(--ink-70); font-size: .95rem; }
+  .abstain .verdict {
+    font-family: var(--mono); font-size: .68rem;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--eosin);
+    margin-bottom: .75rem;
+  }
 
-  .source {
-    border: 1px solid var(--line); border-left: 3px solid var(--line);
-    background: #fff; border-radius: 3px; padding: .85rem 1rem; margin-bottom: .6rem;
-    font-size: .88rem;
+  /* ----------------------------------------------------------- warning --- */
+
+  /* Zero citations on a non-abstained answer is the hallucination signal.
+     Hatching is the plot convention for "no data here". */
+  .warn {
+    margin-top: 1rem;
+    border: 1px solid var(--eosin); border-left-width: 3px; border-radius: 2px;
+    padding: .9rem 1.1rem;
+    background-color: var(--eosin-lo);
+    background-image: repeating-linear-gradient(45deg,
+      transparent 0 7px, rgba(178, 29, 95, .08) 7px 14px);
   }
-  .source.used { border-left-color: var(--evidence); }
-  .source.flash { border-left-color: var(--mark); background: #fffdf7; }
-  .source-head {
-    display: flex; justify-content: space-between; gap: 1rem;
-    font-family: var(--mono); font-size: .75rem; color: var(--muted); margin-bottom: .5rem;
+  .warn strong {
+    display: block;
+    font-family: var(--mono); font-size: .68rem; font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--eosin);
+    margin-bottom: .35rem;
   }
-  .source p { margin: 0; color: #2c3a37; }
-  .empty { color: var(--muted); font-size: .9rem; margin-top: 2.5rem; }
-  @media (prefers-reduced-motion: no-preference) { .source { transition: background .4s, border-color .4s; } }
+  .warn p { margin: 0; font-size: .88rem; color: var(--ink-70); max-width: 60ch; }
+
+  /* ----------------------------------------------------------- latency --- */
+
+  .latency { margin-top: 1.5rem; }
+  .bar {
+    display: flex; height: 6px; overflow: hidden;
+    background: var(--rule-lo); border-radius: 1px;
+  }
+  .bar i { display: block; height: 100%; }
+  .bar .retr { background: var(--ink); min-width: 2px; }
+  .bar .gen  { background: var(--rule); }
+  .latency-legend {
+    display: flex; flex-wrap: wrap; gap: .2rem 1rem;
+    margin: .5rem 0 0;
+    font-family: var(--mono); font-size: .7rem; color: var(--ink-45);
+    font-variant-numeric: tabular-nums;
+  }
+  .latency-legend b { color: var(--ink); font-weight: 600; }
+  .swatch {
+    display: inline-block; width: .55em; height: .55em;
+    margin-right: .45em; vertical-align: .05em;
+  }
+  .swatch--retr { background: var(--ink); }
+  .swatch--gen  { background: var(--rule); }
+  .ratio { margin-left: auto; color: var(--ink-70); }
+
+  /* ---------------------------------------------------------- evidence --- */
+
+  .axis-key {
+    display: flex; justify-content: space-between;
+    font-family: var(--mono); font-size: .66rem; color: var(--ink-45);
+    letter-spacing: .06em;
+    padding: 0 .3rem .4rem;
+  }
+
+  .evidence-list {
+    border: 1px solid var(--rule); border-radius: 2px;
+    background: var(--panel); overflow: hidden;
+  }
+  .row + .row { border-top: 1px solid var(--rule-lo); }
+  .row { border-left: 2px solid transparent; }
+  .row--cited { border-left-color: var(--eosin); }
+
+  .row-toggle {
+    display: grid;
+    grid-template-columns: 2.1rem 8.5rem minmax(4rem, 1fr) 3rem 4.4rem;
+    align-items: center; gap: .8rem;
+    width: 100%; padding: .55rem .85rem;
+    font: inherit; text-align: left; color: inherit;
+    background: none; border: 0;
+    cursor: pointer;
+  }
+  .row-toggle:hover { background: var(--panel-hi); }
+
+  .row-n {
+    font-family: var(--mono); font-size: .72rem; font-weight: 600;
+    color: var(--ink-45);
+    border: 1px solid var(--rule); border-radius: 2px;
+    padding: .05rem 0; text-align: center;
+  }
+  .row--cited .row-n { color: var(--eosin); border-color: var(--eosin); }
+
+  .row-doc {
+    font-family: var(--mono); font-size: .74rem; color: var(--ink-70);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .row-tag {
+    text-align: right;
+    font-family: var(--mono); font-size: .62rem;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--eosin);
+  }
+
+  /* The evidence axis. */
+  .track { position: relative; height: 1.5rem; }
+  .track::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 50%;
+    height: 1px; background: var(--rule-lo);
+  }
+  .mark {
+    position: absolute; top: 50%;
+    width: 9px; height: 9px;
+    transform: translate(-50%, -50%);
+    border: 1.5px solid var(--ink-45); border-radius: 50%;
+    background: var(--panel);
+  }
+  .row--cited .mark {
+    /* Filled diamond, so cited reads without relying on colour alone. */
+    border-radius: 0; border-color: var(--eosin); background: var(--eosin);
+    width: 10px; height: 10px;
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .row-score {
+    font-family: var(--mono); font-size: .72rem; color: var(--ink-45);
+    text-align: right; font-variant-numeric: tabular-nums;
+  }
+
+  .row-body { display: grid; grid-template-rows: 0fr; }
+  .row-body > div { overflow: hidden; }
+  .row--open .row-body { grid-template-rows: 1fr; }
+  .passage { padding: .1rem 1.1rem 1.4rem 3.7rem; }
+  .passage-title {
+    margin: 0 0 .5rem;
+    font-family: var(--serif); font-size: .95rem; font-weight: 600;
+    line-height: 1.35; color: var(--ink);
+  }
+  .passage-text {
+    margin: 0; max-width: 68ch;
+    font-family: var(--serif); font-size: .95rem; line-height: 1.65;
+    color: var(--ink-70);
+  }
+
+  .row--target { background: var(--panel-hi); border-left-color: var(--eosin); }
+
+  /* ------------------------------------------------------- empty/error --- */
+
+  .empty { padding: 1.5rem; }
+  .empty p { margin: 0 0 1.1rem; color: var(--ink-70); max-width: 52ch; }
+  .examples { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .example {
+    font: inherit; font-size: .82rem; color: var(--ink-70);
+    background: var(--panel-hi); border: 1px solid var(--rule);
+    border-radius: 2px; padding: .4rem .7rem; cursor: pointer;
+    text-align: left;
+  }
+  .example:hover { border-color: var(--eosin); color: var(--eosin); }
+  .example em {
+    display: block; font-style: normal;
+    font-family: var(--mono); font-size: .62rem;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--ink-45);
+    margin-top: .2rem;
+  }
+
+  .working .mono-line {
+    margin: 0 0 .9rem;
+    font-family: var(--mono); font-size: .72rem;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--ink-45);
+  }
+  .scan { height: 6px; background: var(--rule-lo); overflow: hidden; border-radius: 1px; }
+  .scan i {
+    display: block; width: 30%; height: 100%; background: var(--ink);
+    animation: sweep 1.6s ease-in-out infinite;
+  }
+  @keyframes sweep {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(333%); }
+  }
+  .working p:last-child {
+    margin: .9rem 0 0; font-size: .85rem; color: var(--ink-70); max-width: 52ch;
+  }
+
+  .failure { border-left: 3px solid var(--eosin); }
+  .failure p { margin: 0; color: var(--ink-70); font-size: .9rem; max-width: 52ch; }
+  .failure strong {
+    display: block; color: var(--ink); font-size: 1rem;
+    margin-bottom: .35rem; font-weight: 600;
+  }
+
+  /* ------------------------------------------------------------ footer --- */
+
+  footer {
+    margin-top: 3.5rem; padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--mono); font-size: .68rem; line-height: 1.9;
+    color: var(--ink-45);
+  }
+  footer b { color: var(--ink-70); font-weight: 600; font-variant-numeric: tabular-nums; }
+  footer p { margin: 0; }
+
+  /* ------------------------------------------------------------ motion --- */
+
+  @media (prefers-reduced-motion: no-preference) {
+    .row-body { transition: grid-template-rows .28s ease; }
+    .row, .row-toggle { transition: background .2s ease, border-color .2s ease; }
+    .bar i { transition: width .5s ease-out; }
+    .cite { transition: background .15s ease, color .15s ease; }
+    .mark--pulse { animation: pulse .9s ease-out 2; }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(178, 29, 95, .5); }
+      100% { box-shadow: 0 0 0 10px rgba(178, 29, 95, 0); }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .scan i { width: 100%; animation: none;
+      background: repeating-linear-gradient(90deg,
+        var(--ink) 0 6px, var(--rule-lo) 6px 12px); }
+    .mark--pulse { outline: 2px solid var(--eosin); outline-offset: 3px; }
+    html { scroll-behavior: auto; }
+  }
+
+  /* -------------------------------------------------------- responsive --- */
+
+  @media (max-width: 40rem) {
+    .sheet { padding: 1.75rem 1rem 3rem; }
+    .facts { font-size: .68rem; }
+    form { flex-wrap: wrap; }
+    #q { flex: 1 1 100%; }
+    #go { flex: 1 1 100%; }
+    .measured { margin-left: 0; flex-basis: 100%; }
+    .row-toggle {
+      grid-template-columns: 2.1rem 1fr auto;
+      grid-template-areas: "n doc score" "track track track";
+      gap: .45rem .6rem; padding: .6rem .85rem;
+    }
+    .row-n { grid-area: n; }
+    .row-doc { grid-area: doc; }
+    .row-score { grid-area: score; }
+    .row-tag { display: none; }
+    .row--cited .row-doc::after {
+      content: " · cited"; color: var(--eosin); font-size: .68rem;
+    }
+    .track { grid-area: track; height: 1.1rem; }
+    .axis-key span:nth-child(2) { display: none; }
+    .passage { padding: .1rem .85rem 1.2rem .85rem; }
+    .readout { padding-left: .9rem; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <h1>Ask the corpus</h1>
-    <p class="sub">3,633 biomedical abstracts. Answers cite their evidence, or say nothing at all.</p>
+<main class="sheet">
+
+  <header class="masthead">
+    <div>
+      <p class="eyebrow">Retrieval-augmented · runs offline</p>
+      <h1>Evidence reader</h1>
+    </div>
+    <dl class="facts">
+      <dt>corpus</dt><dd>NFCorpus · 3,633 abstracts · 6,122 chunks</dd>
+      <dt>stack</dt><dd>numpy index · BM25 · Ollama, on this host</dd>
+      <dt>network</dt><dd>none — no data leaves the machine</dd>
+    </dl>
   </header>
 
-  <form id="form">
-    <input id="q" placeholder="does vitamin d reduce mortality" autocomplete="off" required>
-    <button id="go" type="submit">Ask</button>
-  </form>
+  <section class="console">
+    <form id="ask">
+      <label class="sr-only" for="q">Question</label>
+      <input id="q" name="q" type="text" autocomplete="off" required
+             minlength="3" maxlength="500"
+             placeholder="does vitamin d reduce mortality">
+      <button id="go" type="submit">Ask</button>
+    </form>
 
-  <div class="controls">
-    <label>Retrieval
-      <select id="strategy">
-        <option value="hybrid">hybrid</option>
-        <option value="dense">dense</option>
-        <option value="bm25">bm25</option>
-      </select>
-    </label>
-    <label>Passages
-      <select id="k"><option>3</option><option selected>5</option><option>8</option></select>
-    </label>
-  </div>
+    <div class="knobs">
+      <label for="strategy">Retrieval
+        <select id="strategy">
+          <option value="hybrid" selected>hybrid (RRF)</option>
+          <option value="dense">dense</option>
+          <option value="bm25">bm25</option>
+        </select>
+      </label>
+      <label for="k">Passages
+        <select id="k">
+          <option>3</option>
+          <option selected>5</option>
+          <option>8</option>
+        </select>
+      </label>
+      <p class="measured">measured nDCG@10 <b id="ndcg">0.333</b> over 323 queries</p>
+    </div>
+  </section>
 
-  <div id="out"><p class="empty">Ask a question to see the passages behind the answer.</p></div>
-</div>
+  <p class="sr-only" role="status" id="status"></p>
+
+  <section id="out"></section>
+
+  <footer>
+    <p>Retrieval, 323 NFCorpus queries, nDCG@10 —
+       dense <b>0.285</b> · bm25 <b>0.302</b> · hybrid RRF <b>0.333</b> ·
+       hybrid + cross-encoder rerank <b>0.356</b></p>
+    <p>Answers, 15 evaluated questions —
+       valid citations <b>100%</b> · uncited claims <b>0%</b> ·
+       abstained on <b>5 of 5</b> out-of-corpus questions · faithfulness <b>0.82</b></p>
+  </footer>
+
+</main>
 
 <script>
-const $ = id => document.getElementById(id);
-const escape = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+"use strict";
 
-// Turn [n] markers into buttons pointing at their source card.
-function linkCitations(text) {
-  return escape(text).replace(/\[(\d+)\]/g,
-    (_, n) => `<span class="cite" data-n="${n}" role="button" tabindex="0">${n}</span>`);
+const $ = sel => document.querySelector(sel);
+const out = $("#out");
+const status = $("#status");
+
+// Measured offline, per strategy. See results/*.json.
+const NDCG = { hybrid: "0.333", dense: "0.285", bm25: "0.302" };
+
+const esc = s => String(s).replace(/[&<>"]/g,
+  c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+const num = n => n.toLocaleString("en-US");
+
+/* Chunks at position 0 lead with the abstract title, separated by a blank line.
+   Surfacing it gives the passage a provenance a chunk id cannot. */
+function splitPassage(text) {
+  const i = text.indexOf("\n\n");
+  return (i > 0 && i < 200) ? [text.slice(0, i), text.slice(i + 2)] : [null, text];
+}
+
+/* Citations are controls. A marker pointing past the retrieved set is not a
+   citation at all, and is drawn as the broken reference it is. */
+function withCitations(text, count) {
+  return esc(text).replace(/\[(\d+)\]/g, (whole, digits) => {
+    const n = Number(digits);
+    if (n >= 1 && n <= count) {
+      return `<button type="button" class="cite" data-n="${n}"
+        aria-controls="p-${n}" title="Show passage ${n}">${n}</button>`;
+    }
+    return `<span class="cite cite--broken"
+      title="No passage [${n}] was retrieved">${n}</span>`;
+  });
+}
+
+function latency(data) {
+  const total = Math.max(1, data.retrieval_ms + data.generation_ms);
+  const ratio = data.retrieval_ms > 0
+    ? Math.round(data.generation_ms / data.retrieval_ms) : null;
+  return `
+    <div class="latency">
+      <div class="bar" role="img" aria-label="Retrieval ${data.retrieval_ms} milliseconds, generation ${data.generation_ms} milliseconds, drawn to scale">
+        <i class="retr" style="width:${(data.retrieval_ms / total * 100).toFixed(2)}%"></i>
+        <i class="gen"  style="width:${(data.generation_ms / total * 100).toFixed(2)}%"></i>
+      </div>
+      <p class="latency-legend">
+        <span><i class="swatch swatch--retr"></i>retrieval <b>${num(data.retrieval_ms)} ms</b></span>
+        <span><i class="swatch swatch--gen"></i>generation <b>${num(data.generation_ms)} ms</b></span>
+        ${ratio ? `<span class="ratio">generation is <b>${num(ratio)}×</b> retrieval</span>` : ""}
+      </p>
+    </div>`;
+}
+
+/* Every passage is a marker on one track. Scores are normalised within the
+   result set: RRF, BM25 and cosine live on incomparable scales, so only the
+   spread within a single query means anything. */
+function evidence(sources) {
+  if (!sources.length) return "";
+  const scores = sources.map(s => s.score);
+  const lo = Math.min(...scores), hi = Math.max(...scores), span = hi - lo;
+
+  const rows = sources.map(s => {
+    const pos = span > 0 ? 4 + 92 * (s.score - lo) / span : 96;
+    const [title, body] = splitPassage(s.text);
+    return `
+      <article class="row ${s.cited ? "row--cited" : ""}" id="p-${s.n}">
+        <h3 style="margin:0">
+          <button type="button" class="row-toggle"
+                  aria-expanded="false" aria-controls="body-${s.n}">
+            <span class="row-n">${s.n}</span>
+            <span class="row-doc">${esc(s.doc_id)}</span>
+            <span class="track"><span class="mark" style="left:${pos.toFixed(1)}%"></span></span>
+            <span class="row-tag">${s.cited ? "cited" : ""}</span>
+            <span class="row-score">${s.score.toFixed(4)}</span>
+          </button>
+        </h3>
+        <div class="row-body" id="body-${s.n}">
+          <div><div class="passage">
+            ${title ? `<p class="passage-title">${esc(title)}</p>` : ""}
+            <p class="passage-text">${esc(body)}</p>
+          </div></div>
+        </div>
+      </article>`;
+  }).join("");
+
+  const cited = sources.filter(s => s.cited).length;
+  return `
+    <div class="section-label">
+      <span>Evidence</span>
+      <span>${sources.length} retrieved · ${cited} cited</span>
+    </div>
+    <div class="axis-key"><span>weaker match</span><span>relative score, this query</span><span>stronger</span></div>
+    <div class="evidence-list">${rows}</div>`;
 }
 
 function render(data) {
-  const total = data.retrieval_ms + data.generation_ms;
-  const body = data.abstained
-    ? `<p class="abstained">No passage in the corpus answers this question. The system declined rather than guessed.</p>`
-    : `<div class="answer">${linkCitations(data.answer)}</div>`;
+  const sources = data.sources || [];
+  const cited = sources.filter(s => s.cited).length;
+  let head;
 
-  $("out").innerHTML = body + `
-    <div class="timing">
-      <div style="width:${(data.retrieval_ms / total * 100).toFixed(1)}%"></div>
-      <div style="width:${(data.generation_ms / total * 100).toFixed(1)}%"></div>
-    </div>
-    <p class="timing-legend">retrieval ${data.retrieval_ms} ms · generation ${data.generation_ms} ms</p>
-    <h2>Retrieved passages</h2>` +
-    data.sources.map(s => `
-      <div class="source ${s.cited ? "used" : ""}" id="src-${s.n}">
-        <div class="source-head">
-          <span>[${s.n}] ${s.doc_id}${s.cited ? " · cited" : ""}</span>
-          <span>${s.score.toFixed(3)}</span>
-        </div>
-        <p>${escape(s.text)}</p>
-      </div>`).join("");
+  if (data.abstained) {
+    // Not an error. The corpus was searched and it does not hold an answer.
+    head = `
+      <div class="section-label"><span>Result</span><span>abstained</span></div>
+      <div class="panel abstain">
+        <p class="verdict">Insufficient context</p>
+        <h2>The corpus does not answer this.</h2>
+        <p>${num(sources.length)} passages were retrieved and none of them state an
+        answer to the question. Rather than infer one, the system stopped. The
+        retrieval is below, so you can check that judgement yourself.</p>
+        ${latency(data)}
+      </div>`;
+  } else {
+    head = `
+      <div class="section-label">
+        <span>Answer</span>
+        <span>${cited} of ${sources.length} passages cited</span>
+      </div>
+      <div class="panel">
+        <p class="readout">${withCitations(data.answer || "", sources.length)}</p>
+        ${cited === 0 ? `
+          <div class="warn">
+            <strong>No citations in this answer</strong>
+            <p>Every factual sentence is meant to carry a passage number. An answer
+            with none of them is not traceable to the corpus, and may be the model
+            drawing on its own knowledge. Treat it as unverified.</p>
+          </div>` : ""}
+        ${latency(data)}
+      </div>`;
+  }
+
+  out.innerHTML = head + evidence(sources);
+
+  status.textContent = data.abstained
+    ? "The system abstained. No passage in the corpus answers this question."
+    : `Answer ready. ${cited} of ${sources.length} retrieved passages cited.`;
+
+  // Draw the latency bar from zero once, so the asymmetry is felt, not just read.
+  const bar = out.querySelector(".bar");
+  if (bar && matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+    const widths = [...bar.children].map(i => i.style.width);
+    bar.querySelectorAll("i").forEach(i => (i.style.width = "0%"));
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      [...bar.children].forEach((i, idx) => (i.style.width = widths[idx]));
+    }));
+  }
 }
 
-$("out").addEventListener("click", e => {
-  const n = e.target.dataset?.n;
-  if (!n) return;
-  const card = $(`src-${n}`);
-  card.scrollIntoView({ behavior: "smooth", block: "center" });
-  card.classList.add("flash");
-  setTimeout(() => card.classList.remove("flash"), 1600);
+function openRow(row, open) {
+  row.classList.toggle("row--open", open);
+  row.querySelector(".row-toggle").setAttribute("aria-expanded", String(open));
+}
+
+/* The signature interaction: a citation opens the passage that supports it. */
+function reveal(n) {
+  const row = document.getElementById(`p-${n}`);
+  if (!row) return;
+  openRow(row, true);
+  row.scrollIntoView({
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "center",
+  });
+  const mark = row.querySelector(".mark");
+  mark.classList.remove("mark--pulse");
+  void mark.offsetWidth;
+  mark.classList.add("mark--pulse");
+  out.querySelectorAll(".row--target").forEach(r => r.classList.remove("row--target"));
+  row.classList.add("row--target");
+}
+
+out.addEventListener("click", event => {
+  const cite = event.target.closest(".cite[data-n]");
+  if (cite) { reveal(cite.dataset.n); return; }
+
+  const toggle = event.target.closest(".row-toggle");
+  if (toggle) {
+    const row = toggle.closest(".row");
+    openRow(row, !row.classList.contains("row--open"));
+    return;
+  }
+
+  const example = event.target.closest(".example");
+  if (example) {
+    $("#q").value = example.dataset.q;
+    $("#ask").requestSubmit();
+  }
 });
 
-$("form").addEventListener("submit", async e => {
-  e.preventDefault();
-  $("go").disabled = true;
-  $("out").innerHTML = `<p class="empty">Searching the corpus…</p>`;
+function empty() {
+  out.innerHTML = `
+    <div class="section-label"><span>Console</span><span>idle</span></div>
+    <div class="panel empty">
+      <p>Ask a question about nutrition, diet, or disease risk. The answer arrives
+      with the passages it was built from, and nothing else.</p>
+      <div class="examples">
+        <button type="button" class="example" data-q="does vitamin d reduce mortality">
+          does vitamin d reduce mortality</button>
+        <button type="button" class="example" data-q="what are the effects of dietary fiber on cholesterol">
+          what are the effects of dietary fiber on cholesterol</button>
+        <button type="button" class="example" data-q="who won the 2014 football world cup">
+          who won the 2014 football world cup<em>outside the corpus</em></button>
+      </div>
+    </div>`;
+}
+
+$("#strategy").addEventListener("change", event => {
+  $("#ndcg").textContent = NDCG[event.target.value];
+});
+
+$("#ask").addEventListener("submit", async event => {
+  event.preventDefault();
+  const question = $("#q").value.trim();
+  if (question.length < 3) return;
+
+  $("#go").disabled = true;
+  status.textContent = "Searching the corpus.";
+  out.innerHTML = `
+    <div class="section-label"><span>Console</span><span>working</span></div>
+    <div class="panel working">
+      <p class="mono-line">retrieving · generating</p>
+      <div class="scan"><i></i></div>
+      <p>Retrieval takes about 200 ms. Generation runs on the local model and
+      takes about 6 seconds — the whole reason the two are timed separately.</p>
+    </div>`;
+
   try {
-    const res = await fetch("/ask", {
+    const response = await fetch("/ask", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        question: $("q").value,
-        strategy: $("strategy").value,
-        k: Number($("k").value),
+        question,
+        strategy: $("#strategy").value,
+        k: Number($("#k").value),
       }),
     });
-    if (!res.ok) throw new Error(`${res.status}`);
-    render(await res.json());
-  } catch (err) {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    render(await response.json());
+  } catch (error) {
     // Errors say what happened and what to do, without apologising.
-    $("out").innerHTML = `<p class="empty">The API did not respond (${err.message}). Check that the service and Ollama are running.</p>`;
+    out.innerHTML = `
+      <div class="section-label"><span>Console</span><span>no response</span></div>
+      <div class="panel failure">
+        <strong>The API did not respond (${esc(error.message)}).</strong>
+        <p>Check that the service and Ollama are both running on this host, then
+        ask again.</p>
+      </div>`;
+    status.textContent = "The API did not respond.";
   } finally {
-    $("go").disabled = false;
+    $("#go").disabled = false;
   }
 });
+
+empty();
 </script>
 </body>
 </html>

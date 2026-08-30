@@ -1,0 +1,17 @@
+{
+  "config": {
+    "strategy": "hybrid",
+    "embedder": "ollama-qwen3-embedding-0.6b",
+    "dim": 1024,
+    "rerank": true,
+    "chunk_k": 50,
+    "doc_k": 10,
+    "queries": 323
+  },
+  "metrics": {
+    "ndcg@10": 0.3555089275738036,
+    "recall@10": 0.1682103944469954,
+    "recall@50": 0.24594141364278832
+  },
+  "elapsed_s": 195.1
+}

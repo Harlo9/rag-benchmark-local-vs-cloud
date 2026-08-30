@@ -1,0 +1,16 @@
+{
+  "config": {
+    "strategy": "bm25",
+    "embedder": "ollama-qwen3-embedding-0.6b",
+    "dim": 1024,
+    "chunk_k": 50,
+    "doc_k": 10,
+    "queries": 323
+  },
+  "metrics": {
+    "ndcg@10": 0.30155122233519216,
+    "recall@10": 0.14899122049429223,
+    "recall@50": 0.20041618100715616
+  },
+  "elapsed_s": 1.6
+}

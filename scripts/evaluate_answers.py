@@ -26,11 +26,13 @@ from src.eval.questions import IN_DOMAIN, OUT_OF_DOMAIN
 from src.generation.answer import answer_question
 from src.generation.llm import get_llm
 from src.retrieval import build_retriever
+import sys 
+
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 K = 5
-
+VARIANT = sys.argv[1] if len(sys.argv) > 1 else "current"
 load_dotenv(ROOT / ".env")
 
 
@@ -74,7 +76,7 @@ def main() -> None:
             1 for r in records
             if r["in_domain"] and not r["abstained"] and r["uncited_claims"] > 0
         ) / len(IN_DOMAIN),
-        
+
         "guardrail_pass": sum(r["guardrail_passed"] for r in records) / len(records),
         "faithfulness": sum(scored) / len(scored) if scored else None,
         # The key safety metric: did the system refuse what it could not answer?
@@ -87,8 +89,8 @@ def main() -> None:
     }
 
     RESULTS.mkdir(exist_ok=True)
-    (RESULTS / "answers.json").write_text(json.dumps(
-        {"summary": summary, "records": records, }, indent=2
+    (RESULTS / f"answers-{VARIANT}.json").write_text(json.dumps(
+        {"variant": VARIANT, "summary": summary, "records": records}, indent=2
     ))
 
     print("\n" + json.dumps(summary, indent=2))
