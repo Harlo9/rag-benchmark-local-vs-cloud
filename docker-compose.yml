@@ -1,0 +1,33 @@
+# STEP 10 / 10: Service orchestration.
+#
+# Ollama deliberately runs on the host, not in a container: containerised Ollama
+# has no access to Apple Silicon GPU acceleration and falls back to CPU. The API
+# reaches it through host.docker.internal, which resolves to the host machine.
+
+services:
+  api:
+    build: .
+    container_name: rag-api
+    ports:
+      - "8000:8000"
+    environment:
+      # Overrides the .env default, which points at localhost and would resolve
+      # to the container itself.
+      OLLAMA_HOST: http://host.docker.internal:11434
+      EMBEDDING_BACKEND: ollama
+      EMBEDDING_MODEL: qwen3-embedding:0.6b
+      LLM_BACKEND: ollama
+      LLM_MODEL: qwen2.5:3b-instruct
+    volumes:
+      # Corpus and index are mounted, not baked in: they are generated artifacts,
+      # regenerable from scripts, and would bloat the image.
+      - ./data:/app/data:ro
+    extra_hosts:
+      # Required on Linux; on macOS and Windows Docker Desktop provides it already.
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
