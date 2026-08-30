@@ -15,7 +15,10 @@ def get_embedder() -> Embedder:
     backend = os.getenv("EMBEDDING_BACKEND", "ollama").lower()
     if backend == "ollama":
         return OllamaEmbedder()
-    # The Azure implementation lands here later, behind the same interface.
+    if backend == "azure":
+        # Imported lazily so the local path never needs the openai package.
+        from .azure import AzureEmbedder
+        return AzureEmbedder()
     raise ValueError(f"Unknown embedding backend: {backend}")
 
 

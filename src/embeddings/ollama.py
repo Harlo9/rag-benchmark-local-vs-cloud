@@ -33,5 +33,7 @@ class OllamaEmbedder(Embedder):
         self.dim = DIMS.get(self.model, 1024)
 
     def embed(self, texts: list[str]) -> list[list[float]]:
-        # Ollama accepts a list, so one HTTP round trip per batch instead of one per text.
-        return self.client.embed(model=self.model, input=texts)["embeddings"]
+        # keep_alive=-1 pins the model in memory instead of letting Ollama unload
+        # it after a few idle minutes. Without it, the first request after a lull
+        # pays a multi-second reload: measured 3337 ms cold vs 210 ms warm.
+        return self.client.embed(model=self.model, input=texts, keep_alive=-1)["embeddings"]

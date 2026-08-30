@@ -12,6 +12,7 @@ from abc import ABC, abstractmethod
 import ollama
 
 
+
 class LLM(ABC):
     name: str
 
@@ -39,12 +40,36 @@ class OllamaLLM(LLM):
             # Temperature 0: grounded answering is not a creative task, and
             # determinism makes the evaluation in step 9 reproducible.
             options={"temperature": 0},
+            keep_alive=-1
         )
         return response["message"]["content"]
 
+class AzureLLM(LLM):
+    def __init__(self, deployment: str | None = None):
+        from openai import AzureOpenAI
 
+        self.deployment = deployment or os.environ["AZURE_LLM_DEPLOYMENT"]
+        self.client = AzureOpenAI(
+            azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
+            api_key=os.environ["AZURE_OPENAI_API_KEY"],
+            api_version=os.getenv("AZURE_API_VERSION", "2024-10-21"),
+        )
+        self.name = f"azure-{self.deployment}"
+
+    def complete(self, system: str, user: str) -> str:
+        response = self.client.chat.completions.create(
+            model=self.deployment,
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+        )
+        return response.choices[0].message.content
+    
 def get_llm() -> LLM:
     backend = os.getenv("LLM_BACKEND", "ollama").lower()
     if backend == "ollama":
         return OllamaLLM()
+    if backend == "azure":
+        return AzureLLM()
     raise ValueError(f"Unknown LLM backend: {backend}")
