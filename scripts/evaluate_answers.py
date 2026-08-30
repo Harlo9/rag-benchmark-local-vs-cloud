@@ -68,6 +68,13 @@ def main() -> None:
     ood = [r for r in records if not r["in_domain"]]
 
     summary = {
+        # Uncited claims on in-domain questions are the hallucination signal:
+        # a model that invents cannot cite, so a missing citation exposes it.
+        "hallucination_rate": sum(
+            1 for r in records
+            if r["in_domain"] and not r["abstained"] and r["uncited_claims"] > 0
+        ) / len(IN_DOMAIN),
+        
         "guardrail_pass": sum(r["guardrail_passed"] for r in records) / len(records),
         "faithfulness": sum(scored) / len(scored) if scored else None,
         # The key safety metric: did the system refuse what it could not answer?
@@ -81,7 +88,7 @@ def main() -> None:
 
     RESULTS.mkdir(exist_ok=True)
     (RESULTS / "answers.json").write_text(json.dumps(
-        {"summary": summary, "records": records}, indent=2
+        {"summary": summary, "records": records, }, indent=2
     ))
 
     print("\n" + json.dumps(summary, indent=2))
