@@ -15,8 +15,8 @@ it. A stronger judge model can be set via JUDGE_MODEL without touching the code.
 
 import os
 import re
+from src.eval.guardrails import CITATION_RE, MIN_CLAIM_CHARS, cited_numbers, split_sentences
 
-from src.eval.guardrails import CITATION_RE, MIN_CLAIM_CHARS, split_sentences
 from src.generation.llm import LLM, OllamaLLM
 
 JUDGE_SYSTEM = """You verify whether a claim is supported by evidence.
@@ -43,8 +43,8 @@ def faithfulness(answer_text: str, passages: list[str], judge: LLM) -> float | N
         if len(sentence) < MIN_CLAIM_CHARS:
             continue
 
-        refs = [int(m) for m in CITATION_RE.findall(sentence)]
-        refs = [r for r in refs if 1 <= r <= len(passages)]
+        
+        refs = [r for r in cited_numbers(sentence) if 1 <= r <= len(passages)]
         if not refs:
             continue
 

@@ -1,0 +1,148 @@
+{
+  "variant": "azure-strict-v2",
+  "summary": {
+    "hallucination_rate": 0.0,
+    "guardrail_pass": 1.0,
+    "faithfulness": 0.96875,
+    "abstention_rate_ood": 1.0,
+    "abstention_rate_in_domain": 0.2,
+    "median_latency_s": 6.1
+  },
+  "records": [
+    {
+      "question": "does vitamin d reduce mortality",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Overall, vitamin D supplementation decreased mortality in randomized trials (RR 0.97, 95% CI 0.94 to 1.00) [4]. Only vitamin D3 significantly decreased mortality (RR 0.94, 95% CI 0.91 to 0.98), whereas vitamin D2, alfacalcidol, and calcitriol did not [4]."
+    },
+    {
+      "question": "is red meat linked to colorectal cancer",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Yes \u2014 prospective meta-analyses found that red and processed meat intake was associated with increased colorectal cancer risk (summary RR 1.22 for highest vs lowest intake; RR 1.14 per 100 g/day) [1].  \nOther reviews report a modest 20\u201330% increased risk for high consumers of cured and red meat, and case-control studies have linked meat-related compounds (HCAs, PAHs, nitrites/nitrates) to colorectal cancer and subsite-specific tumors [3][4]."
+    },
+    {
+      "question": "what are the effects of dietary fiber on cholesterol",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "A very-high-fiber vegetable, fruit, and nut diet produced the largest reduction in LDL cholesterol (33% \u00b1 4%) compared with starch-based and low-fat diets in a 2-week controlled study of ten healthy volunteers [1]. Regular consumption of dietary fiber, particularly cereal fiber, may improve cardiovascular health through multiple mechanisms including lipid reduction [3]."
+    },
+    {
+      "question": "does green tea help with weight loss",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 0.75,
+      "answer": "Laboratory studies have demonstrated the potential efficacy of green or black tea for the prevention of obesity [1].  \nResults of human intervention studies are mixed and the role of caffeine in any effect has not been clearly established [1]."
+    },
+    {
+      "question": "are artificial sweeteners linked to diabetes",
+      "in_domain": true,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "what is the effect of soy on breast cancer risk",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "In high-soy-consuming Asian studies, increasing soy food intake was associated with decreased breast cancer risk, with OR=0.88 (\u224810 mg isoflavones/day) and OR=0.71 (\u226520 mg/day) compared to \u22645 mg/day [1].  \nIn contrast, studies in low-soy-consuming Western populations found soy intake was unrelated to breast cancer risk [1].  \nOther studies report that high soy intake during adolescence or consistent high intake is associated with reduced premenopausal breast cancer risk and that associations may vary by ER/PR status [5][4]."
+    },
+    {
+      "question": "does coffee consumption affect liver disease",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Observational studies and meta-analyses report that coffee consumption is associated with a reduced risk of hepatocellular carcinoma (HCC) and liver cancer, with summary relative risks/odds ratios around 0.44\u20130.80 for higher versus no consumption and a reported 40% reduced HCC risk for any coffee consumption versus none in one meta-analysis [1][4]. Coffee intake has also been associated with lower mortality from chronic liver disease in cohort studies and with lower liver enzymes and reduced oxidative/collagen markers during coffee consumption in a randomized trial [5][2]."
+    },
+    {
+      "question": "is there a link between dairy and prostate cancer",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Yes \u2014 several epidemiological studies and reviews report that higher milk or dairy consumption is associated with an increased risk of prostate cancer [1][5][3]. Mechanistic reviews propose roles for milk-derived hormones, IGF-1, and milk-stimulated mTORC1 signaling in promoting prostate cancer development or progression [2][4]."
+    },
+    {
+      "question": "what are the cardiovascular effects of omega 3",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Omega-3 fatty acids have an antiarrhythmic effect that may be particularly crucial for men at high risk of sudden death [1].  \nIntake of alpha-linolenic acid (an omega-3) from walnuts and flax was associated with reductions in low-density lipoprotein cholesterol and several markers of inflammation [4].  \nOmega-3 polyunsaturated fatty acids were associated with decreased serum triglycerides and demonstrated hypotriglyceridemic and anti-inflammatory effects, with decreases in insulin resistance and inflammatory markers seen in one survey [5]."
+    },
+    {
+      "question": "does fasting improve insulin sensitivity",
+      "in_domain": true,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "how do I renew my french passport",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "who won the 2014 football world cup",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "what is the capital of mongolia",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "how do I configure a kubernetes ingress",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "what is the population of Lisbon",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    }
+  ]
+}

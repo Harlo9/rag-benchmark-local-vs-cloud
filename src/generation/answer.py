@@ -31,8 +31,9 @@ class Answer:
 
 
 def cited_passages(text: str, n_passages: int) -> list[int]:
-    """Extract [n] markers, keeping only those pointing at a real passage."""
-    found = {int(m) for m in re.findall(r"\[(\d+)\]", text)}
+    """Extract cited passage numbers, keeping only those pointing at a real passage."""
+    from src.eval.guardrails import cited_numbers
+    found = set(cited_numbers(text))
     return sorted(i for i in found if 1 <= i <= n_passages)
 
 

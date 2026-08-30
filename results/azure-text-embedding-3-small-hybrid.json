@@ -1,0 +1,17 @@
+{
+  "config": {
+    "strategy": "hybrid",
+    "embedder": "azure-text-embedding-3-small",
+    "dim": 1536,
+    "rerank": false,
+    "chunk_k": 50,
+    "doc_k": 10,
+    "queries": 323
+  },
+  "metrics": {
+    "ndcg@10": 0.3625997143656762,
+    "recall@10": 0.18299037175060937,
+    "recall@50": 0.2754683945196927
+  },
+  "elapsed_s": 86.3
+}

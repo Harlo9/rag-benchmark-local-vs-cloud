@@ -1,0 +1,148 @@
+{
+  "variant": "local-strict-v2",
+  "summary": {
+    "hallucination_rate": 0.0,
+    "guardrail_pass": 1.0,
+    "faithfulness": 0.7142857142857143,
+    "abstention_rate_ood": 1.0,
+    "abstention_rate_in_domain": 0.2,
+    "median_latency_s": 9.9
+  },
+  "records": [
+    {
+      "question": "does vitamin d reduce mortality",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "[2] suggests that vitamin D in the form of vitamin D(3) seems to decrease mortality in predominantly elderly women who are mainly in institutions and dependent care."
+    },
+    {
+      "question": "is red meat linked to colorectal cancer",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "[1], [2]"
+    },
+    {
+      "question": "what are the effects of dietary fiber on cholesterol",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "[1] Regular consumption of dietary fiber, particularly fiber from cereal sources, may improve CVD health through multiple mechanisms including lipid reduction."
+    },
+    {
+      "question": "does green tea help with weight loss",
+      "in_domain": true,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "are artificial sweeteners linked to diabetes",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 0.5,
+      "answer": "[1] Since their discovery, the safety of artificial sweeteners has been controversial, and these substances have been linked to various health issues including diabetes."
+    },
+    {
+      "question": "what is the effect of soy on breast cancer risk",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Soy intake during childhood, adolescence, and adult life was associated with decreased breast cancer risk, with the strongest, most consistent effect for childhood intake [2]."
+    },
+    {
+      "question": "does coffee consumption affect liver disease",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 0.5,
+      "answer": "[3] suggests an inverse association between coffee consumption and liver cancer, indicating that coffee may have benefits for the liver. [1] further supports this by showing inverse associations in coffee consumption for chronic liver disease, regardless of whether the coffee was boiled or filtered."
+    },
+    {
+      "question": "is there a link between dairy and prostate cancer",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 0.5,
+      "answer": "[1] and [5] suggest a link between dairy consumption and increased prostate cancer risk."
+    },
+    {
+      "question": "what are the cardiovascular effects of omega 3",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 0.5,
+      "answer": "[1] shows a small reduction in cardiovascular death with omega-3 fatty acid supplements, but this effect disappeared when a problematic study was excluded. [1] also indicates no significant preventive effect in subgroup analyses, suggesting inconsistent or limited cardiovascular benefits."
+    },
+    {
+      "question": "does fasting improve insulin sensitivity",
+      "in_domain": true,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "how do I renew my french passport",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "who won the 2014 football world cup",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "what is the capital of mongolia",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "how do I configure a kubernetes ingress",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "what is the population of Lisbon",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    }
+  ]
+}

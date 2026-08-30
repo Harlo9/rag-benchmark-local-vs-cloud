@@ -1,0 +1,17 @@
+{
+  "config": {
+    "strategy": "dense",
+    "embedder": "azure-text-embedding-3-small",
+    "dim": 1536,
+    "rerank": false,
+    "chunk_k": 50,
+    "doc_k": 10,
+    "queries": 323
+  },
+  "metrics": {
+    "ndcg@10": 0.38159799929256666,
+    "recall@10": 0.1884932307048008,
+    "recall@50": 0.2780387563366934
+  },
+  "elapsed_s": 81.6
+}
