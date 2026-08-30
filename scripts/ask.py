@@ -19,7 +19,7 @@ load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 def main() -> None:
     question = " ".join(sys.argv[1:]) or "does vitamin d reduce mortality"
 
-    retriever = build_retriever(strategy="hybrid")
+    retriever = build_retriever(strategy="hybrid", diversify=True)
     result = answer_question(question, retriever, get_llm(), k=5)
 
     print(f"Q: {result.question}\n")

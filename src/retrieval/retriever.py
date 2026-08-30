@@ -27,9 +27,11 @@ class Hit:
 
 class Retriever:
     def __init__(self, index_dir: Path, chunks_path: Path, embedder: Embedder,
-                 strategy: str = "dense", rerank: bool = False, candidates: int = 50):
+                 strategy: str = "dense", rerank: bool = False,
+                 candidates: int = 50, diversify: bool = False):
         self.strategy = strategy
-        self.candidates = candidates   # first-stage depth before reranking
+        self.candidates = candidates
+        self.diversify = diversify
         self.store = ChunkStore(chunks_path)
         self.dense = VectorIndex(index_dir, embedder) if strategy in ("dense", "hybrid") else None
         self.sparse = BM25Index(chunks_path) if strategy in ("bm25", "hybrid") else None
@@ -44,7 +46,7 @@ class Retriever:
     def retrieve(self, query: str, k: int = 10) -> list[Hit]:
         # Reranking only reorders what first-stage retrieval found, so its depth
         # caps the final quality: nothing outside the candidate pool can be recovered.
-        depth = max(k, self.candidates) if self.reranker else k
+        depth = max(k, self.candidates) if (self.reranker or self.diversify) else k
 
         if self.strategy == "dense":
             raw = self.dense.search(query, k=depth)
@@ -63,6 +65,15 @@ class Retriever:
         if self.reranker:
             raw = self.reranker.rerank(query, raw, top_k=k)
 
+        if self.diversify and self.dense is not None and len(raw) > k:
+            # Applied after reranking: relevance first, then break up duplicates.
+            from src.retrieval.mmr import mmr_select
+            qv = self.dense.embed_query(query)
+            cv = self.dense.vectors_for([h["chunk_id"] for h in raw])
+            raw = [raw[i] for i in mmr_select(qv, cv, k=k)]
+        elif not self.diversify:
+            raw = raw[:k]
+        
         return [
             Hit(chunk_id=h["chunk_id"], doc_id=h["doc_id"], text=h["text"],
                 score=h["score"], rank=rank)

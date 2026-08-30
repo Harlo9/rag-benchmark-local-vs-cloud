@@ -13,7 +13,8 @@ from src.retrieval.retriever import Hit, Retriever
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def build_retriever(strategy: str = "dense", rerank: bool = False) -> Retriever:
+def build_retriever(strategy: str = "dense", rerank: bool = False,
+                    diversify: bool = False) -> Retriever:
     embedder = get_embedder()
     return Retriever(
         index_dir=ROOT / "data" / "index" / embedder.name,
@@ -21,6 +22,7 @@ def build_retriever(strategy: str = "dense", rerank: bool = False) -> Retriever:
         embedder=embedder,
         strategy=strategy,
         rerank=rerank,
+        diversify=diversify,
     )
 
 __all__ = ["Hit", "Retriever", "build_retriever"]

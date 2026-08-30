@@ -58,3 +58,14 @@ class VectorIndex:
             }
             for i in top
         ]
+
+    def vectors_for(self, chunk_ids: list[str]) -> np.ndarray:
+        """Fetch stored (normalised) vectors for given chunks, in the order asked."""
+        if not hasattr(self, "_row_of"):
+            self._row_of = {m["chunk_id"]: i for i, m in enumerate(self.meta)}
+        return self.matrix[[self._row_of[cid] for cid in chunk_ids]]
+
+    def embed_query(self, query: str) -> np.ndarray:
+        """Embed and normalise a query, reusing the index's embedder."""
+        vector = np.asarray(self.embedder.embed([query])[0], dtype=np.float32)
+        return vector / (np.linalg.norm(vector) or 1.0)
