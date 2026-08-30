@@ -12,9 +12,9 @@ roughly DOC_K distinct documents.
 Results are written to results/<backend-model>.json, one file per configuration,
 which is what builds the comparison table in the README.
 
-Usage: python -m scripts.evaluate
+Usage: python -m scripts.evaluate [dense|bm25|hybrid]
 """
-
+import sys
 import json
 import time
 from collections import defaultdict
@@ -32,6 +32,7 @@ RESULTS = ROOT / "results"
 
 DOC_K = 10      # documents evaluated per query
 CHUNK_K = 50    # chunks retrieved, before collapsing to documents
+STRATEGY = sys.argv[1] if len(sys.argv) > 1 else "dense"   # dense | bm25 | hybrid
 
 load_dotenv(ROOT / ".env")
 
@@ -68,7 +69,7 @@ def to_documents(hits, limit: int) -> list[str]:
 
 def main() -> None:
     embedder = get_embedder()
-    retriever = build_retriever()
+    retriever = build_retriever(strategy=STRATEGY)
     qrels, queries = load_qrels(), load_queries()
 
     # Only queries that have judgments can be scored.
@@ -89,19 +90,19 @@ def main() -> None:
 
     report = {
         "config": {
+            "strategy": STRATEGY,
             "embedder": embedder.name,
             "dim": embedder.dim,
             "chunk_k": CHUNK_K,
             "doc_k": DOC_K,
             "queries": len(query_ids),
-            "strategy": "dense",
         },
         "metrics": {name: sum(v) / len(v) for name, v in scores.items()},
         "elapsed_s": round(time.time() - started, 1),
     }
 
     RESULTS.mkdir(exist_ok=True)
-    (RESULTS / f"{embedder.name}-dense.json").write_text(json.dumps(report, indent=2))
+    (RESULTS / f"{embedder.name}-{STRATEGY}.json").write_text(json.dumps(report, indent=2))
 
     print("\n" + json.dumps(report["metrics"], indent=2))
     print(f"elapsed {report['elapsed_s']}s")
