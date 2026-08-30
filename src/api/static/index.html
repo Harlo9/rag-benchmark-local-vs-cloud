@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<!--
+  STEP 10 / 10: Demo interface.
+
+  Single file, no build step, no external requests: the project claims to run
+  fully offline, so the UI must too. Fonts are OS stacks for the same reason.
+
+  The interaction that matters is the citation link: clicking [n] in an answer
+  reveals the passage that supports it. Everything else stays quiet.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local RAG</title>
+<style>
+  :root {
+    --paper: #f5f6f4;
+    --ink: #14211f;
+    --muted: #6b7a77;
+    --line: #dcdfd9;
+    --evidence: #0f4c5c;
+    --mark: #c98a2b;
+    --serif: "Iowan Old Style", Palatino, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); line-height: 1.55;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 3rem 1.25rem 5rem; }
+
+  header { border-bottom: 1px solid var(--line); padding-bottom: 1.25rem; }
+  h1 { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin: 0; }
+  .sub { color: var(--muted); font-size: .85rem; margin-top: .35rem; }
+
+  form { display: flex; gap: .5rem; margin: 1.75rem 0 .75rem; }
+  input {
+    flex: 1; padding: .7rem .85rem; border: 1px solid var(--line);
+    background: #fff; border-radius: 3px; font: inherit; color: inherit;
+  }
+  input:focus, button:focus-visible { outline: 2px solid var(--evidence); outline-offset: 1px; }
+  button {
+    padding: .7rem 1.1rem; border: 0; border-radius: 3px;
+    background: var(--evidence); color: #fff; font: inherit; cursor: pointer;
+  }
+  button:disabled { background: var(--muted); cursor: wait; }
+
+  .controls { display: flex; gap: 1rem; font-size: .8rem; color: var(--muted); }
+  .controls label { display: flex; align-items: center; gap: .35rem; }
+  select { font: inherit; border: 1px solid var(--line); background: #fff; border-radius: 3px; padding: .15rem; }
+
+  .answer {
+    font-family: var(--serif); font-size: 1.15rem; line-height: 1.7;
+    margin: 2.5rem 0 1rem; white-space: pre-wrap;
+  }
+  /* The signature element: a citation is a control, not decoration. */
+  .cite {
+    font-family: var(--mono); font-size: .78em; color: var(--evidence);
+    background: #fff; border: 1px solid var(--line); border-radius: 3px;
+    padding: .05em .3em; cursor: pointer; vertical-align: .12em;
+  }
+  .cite:hover { border-color: var(--mark); color: var(--mark); }
+
+  .abstained {
+    font-family: var(--sans); font-size: .95rem; color: var(--muted);
+    border-left: 2px solid var(--mark); padding-left: .9rem; margin: 2.5rem 0;
+  }
+
+  /* Timings: retrieval and generation drawn to scale, because the whole project
+     is about making that trade-off visible. */
+  .timing { display: flex; height: 4px; margin: 1.5rem 0 .4rem; background: var(--line); }
+  .timing div:first-child { background: var(--evidence); }
+  .timing div:last-child { background: var(--mark); }
+  .timing-legend { font-family: var(--mono); font-size: .72rem; color: var(--muted); }
+
+  h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .09em;
+       color: var(--muted); font-weight: 600; margin: 2.5rem 0 .75rem; }
+
+  .source {
+    border: 1px solid var(--line); border-left: 3px solid var(--line);
+    background: #fff; border-radius: 3px; padding: .85rem 1rem; margin-bottom: .6rem;
+    font-size: .88rem;
+  }
+  .source.used { border-left-color: var(--evidence); }
+  .source.flash { border-left-color: var(--mark); background: #fffdf7; }
+  .source-head {
+    display: flex; justify-content: space-between; gap: 1rem;
+    font-family: var(--mono); font-size: .75rem; color: var(--muted); margin-bottom: .5rem;
+  }
+  .source p { margin: 0; color: #2c3a37; }
+  .empty { color: var(--muted); font-size: .9rem; margin-top: 2.5rem; }
+  @media (prefers-reduced-motion: no-preference) { .source { transition: background .4s, border-color .4s; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Ask the corpus</h1>
+    <p class="sub">3,633 biomedical abstracts. Answers cite their evidence, or say nothing at all.</p>
+  </header>
+
+  <form id="form">
+    <input id="q" placeholder="does vitamin d reduce mortality" autocomplete="off" required>
+    <button id="go" type="submit">Ask</button>
+  </form>
+
+  <div class="controls">
+    <label>Retrieval
+      <select id="strategy">
+        <option value="hybrid">hybrid</option>
+        <option value="dense">dense</option>
+        <option value="bm25">bm25</option>
+      </select>
+    </label>
+    <label>Passages
+      <select id="k"><option>3</option><option selected>5</option><option>8</option></select>
+    </label>
+  </div>
+
+  <div id="out"><p class="empty">Ask a question to see the passages behind the answer.</p></div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const escape = s => s.replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+// Turn [n] markers into buttons pointing at their source card.
+function linkCitations(text) {
+  return escape(text).replace(/\[(\d+)\]/g,
+    (_, n) => `<span class="cite" data-n="${n}" role="button" tabindex="0">${n}</span>`);
+}
+
+function render(data) {
+  const total = data.retrieval_ms + data.generation_ms;
+  const body = data.abstained
+    ? `<p class="abstained">No passage in the corpus answers this question. The system declined rather than guessed.</p>`
+    : `<div class="answer">${linkCitations(data.answer)}</div>`;
+
+  $("out").innerHTML = body + `
+    <div class="timing">
+      <div style="width:${(data.retrieval_ms / total * 100).toFixed(1)}%"></div>
+      <div style="width:${(data.generation_ms / total * 100).toFixed(1)}%"></div>
+    </div>
+    <p class="timing-legend">retrieval ${data.retrieval_ms} ms · generation ${data.generation_ms} ms</p>
+    <h2>Retrieved passages</h2>` +
+    data.sources.map(s => `
+      <div class="source ${s.cited ? "used" : ""}" id="src-${s.n}">
+        <div class="source-head">
+          <span>[${s.n}] ${s.doc_id}${s.cited ? " · cited" : ""}</span>
+          <span>${s.score.toFixed(3)}</span>
+        </div>
+        <p>${escape(s.text)}</p>
+      </div>`).join("");
+}
+
+$("out").addEventListener("click", e => {
+  const n = e.target.dataset?.n;
+  if (!n) return;
+  const card = $(`src-${n}`);
+  card.scrollIntoView({ behavior: "smooth", block: "center" });
+  card.classList.add("flash");
+  setTimeout(() => card.classList.remove("flash"), 1600);
+});
+
+$("form").addEventListener("submit", async e => {
+  e.preventDefault();
+  $("go").disabled = true;
+  $("out").innerHTML = `<p class="empty">Searching the corpus…</p>`;
+  try {
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question: $("q").value,
+        strategy: $("strategy").value,
+        k: Number($("k").value),
+      }),
+    });
+    if (!res.ok) throw new Error(`${res.status}`);
+    render(await res.json());
+  } catch (err) {
+    // Errors say what happened and what to do, without apologising.
+    $("out").innerHTML = `<p class="empty">The API did not respond (${err.message}). Check that the service and Ollama are running.</p>`;
+  } finally {
+    $("go").disabled = false;
+  }
+});
+</script>
+</body>
+</html>

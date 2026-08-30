@@ -18,16 +18,24 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 
 from src.api.schemas import AskRequest, AskResponse, Source
 from src.generation.answer import answer_question
 from src.generation.llm import get_llm
 from src.retrieval import build_retriever
 
+
+
+
+
 load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 # One retriever per strategy, built lazily and then reused.
 _retrievers: dict[str, object] = {}
+
+STATIC = Path(__file__).parent / "static"
+
 
 
 @asynccontextmanager
@@ -67,6 +75,11 @@ def health() -> dict:
     """Liveness probe, also reporting which strategies are already warm."""
     return {"status": "ok", "loaded_strategies": sorted(_retrievers)}
 
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    """Serve the demo page. Kept as a single static file: no build step, no CDN,
+    so the whole project still runs with no network access."""
+    return FileResponse(STATIC / "index.html")
 
 @app.post("/ask", response_model=AskResponse)
 def ask(request: AskRequest) -> AskResponse:
