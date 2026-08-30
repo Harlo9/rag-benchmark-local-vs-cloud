@@ -104,8 +104,11 @@ def main() -> None:
     }
 
     RESULTS.mkdir(exist_ok=True)
-    (RESULTS / f"{embedder.name}-{STRATEGY}.json").write_text(json.dumps(report, indent=2))
-
+   # The rerank flag is part of the configuration, so it must be part of the
+    # filename: otherwise a reranked run silently overwrites its own baseline.
+    suffix = f"{STRATEGY}-rerank" if RERANK else STRATEGY
+    (RESULTS / f"{embedder.name}-{suffix}.json").write_text(json.dumps(report, indent=2))
+    
     print("\n" + json.dumps(report["metrics"], indent=2))
     print(f"elapsed {report['elapsed_s']}s")
 

@@ -6,3 +6,4 @@ python-dotenv==1.0.1
 rank-bm25==0.2.2
 sentence-transformers==3.3.1
 fastapi[standard]==0.115.6
+matplotlib==3.9.2
