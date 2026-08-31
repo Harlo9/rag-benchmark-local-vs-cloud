@@ -1,38 +1,73 @@
-# Secure RAG
+# RAG Benchmark: Local vs Cloud
 
-**A question-answering system over a document corpus that cites its evidence, refuses to answer when the corpus cannot, and runs entirely on your own machine.**
+**A retrieval-augmented question answering system on a medical corpus, benchmarked end to end on two infrastructures: fully local (Ollama) and hosted (Azure OpenAI). It cites its evidence, declines when the corpus cannot answer, and proves both with numbers.**
 
-![Python](https://img.shields.io/badge/python-3.12-blue)
-![Docker](https://img.shields.io/badge/docker-compose-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-local%20LLM-000000?logo=ollama&logoColor=white)
+![Azure OpenAI](https://img.shields.io/badge/Azure%20OpenAI-0078D4?logo=microsoftazure&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## The problem
+## 🎬 Demo
+
+![Demo](docs/demo.gif)
+
+Ask a question, get an answer where every factual sentence carries a citation, and click any `[n]` to reveal the exact passage that supports it. Verification is one click away, so the reader never has to take the model's word for it.
+
+### And when the corpus cannot answer
+
+![Abstention demo](docs/demo-abstention.gif)
+
+Retrieval always returns something, even for a question about football, because nearest-neighbour search has no notion of "nothing here is relevant". The system detects it and declines instead of guessing. **This is the behaviour that makes a RAG usable on data where a wrong answer is a liability.**
+
+---
+
+## 🧰 Stack
+
+| Layer | Technology |
+|---|---|
+| **Language** | Python 3.12 |
+| **Local inference** | Ollama (`qwen3-embedding:0.6b`, `qwen2.5:3b-instruct`) |
+| **Cloud inference** | Azure OpenAI (`text-embedding-3-small`, `gpt-5-mini`) |
+| **Vector search** | NumPy (normalised matrix, cosine as dot product) |
+| **Lexical search** | `rank-bm25` (BM25 Okapi) |
+| **Reranking** | `sentence-transformers` cross-encoder (`ms-marco-MiniLM-L-6-v2`) |
+| **API** | FastAPI + Uvicorn, Pydantic schemas, OpenAPI docs |
+| **Interface** | Single self-contained HTML page, no build step, no CDN |
+| **Packaging** | Docker + Docker Compose |
+| **Benchmark** | NFCorpus (BEIR), 323 queries with human relevance judgments |
+| **Metrics** | nDCG@10, Recall@k, faithfulness (LLM-as-a-judge), deterministic guardrails |
+| **Figures** | Matplotlib, regenerated from measured results |
+
+---
+
+## 🎯 The problem
 
 Most organisations that would benefit from an internal AI assistant cannot use one, for two reasons that have nothing to do with model quality:
 
-1. **Their documents cannot leave their infrastructure.** Legal, medical, industrial and HR corpora are exactly the ones where a RAG pipeline pays off, and exactly the ones that cannot be sent to a third-party API.
+1. **Their documents cannot leave their infrastructure.** Medical, legal, industrial and HR corpora are exactly the ones where a RAG pipeline pays off, and exactly the ones that cannot be sent to a third-party API.
 2. **A fluent wrong answer is worse than no answer.** A system that invents a plausible claim about a drug interaction or a contract clause is not a productivity tool, it is a liability.
 
 This project addresses both, and measures whether it actually succeeds.
 
-## What it does
+The corpus is medical on purpose: 3,633 PubMed abstracts on nutrition and health, the exact domain where an organisation is least free to send its data elsewhere. The abstracts themselves are public, which is what makes the benchmark reproducible; the pipeline and its constraints are built for the case where they would not be.
 
-It answers natural-language questions over 3,633 biomedical abstracts (NFCorpus). Every factual sentence in an answer carries a citation pointing at the passage that supports it. When no retrieved passage answers the question, the system says so instead of guessing. Embeddings, retrieval and generation all run locally through Ollama, so no text leaves the host.
-
-## What makes it different
+## ✨ What makes it different
 
 Most RAG repositories demonstrate that a pipeline runs. This one measures **how much each decision is worth, and what it costs**:
 
-- Four retrieval strategies evaluated on a public benchmark with human relevance judgments, latency reported alongside every score.
-- Answer quality measured separately from retrieval quality, because a perfect retrieval can still produce a wrong answer.
-- The same pipeline run against a hosted provider (Azure OpenAI) on identical queries, so the local-versus-cloud trade-off is quantified rather than asserted.
-- Negative and counter-intuitive results reported rather than hidden.
+- 🔬 Four retrieval strategies evaluated on a public benchmark with human relevance judgments, latency reported alongside every score.
+- 🧪 Answer quality measured separately from retrieval quality, because a perfect retrieval can still produce a wrong answer.
+- ☁️ The same pipeline run against Azure OpenAI on identical queries, so the local-versus-cloud trade-off is quantified rather than asserted.
+- 📉 Negative and counter-intuitive results reported rather than hidden.
 
 ---
 
-## Key results
+## 📊 Key results
 
 ### Retrieval quality, and what it costs
 
@@ -78,11 +113,11 @@ Measured on 15 questions: 10 the corpus can answer, 5 it cannot.
 
 ---
 
-## Local versus Azure OpenAI
+## ⚖️ Local vs Azure OpenAI
 
-The same pipeline, the same queries, two providers. Selection is a single environment variable.
+The same pipeline, the same queries, two infrastructures. Selection is a single environment variable.
 
-| | Local (Ollama, M2 16 GB) | Azure OpenAI (East US) |
+| | 💻 Local (Ollama, M2 16 GB) | ☁️ Azure OpenAI (East US) |
 |---|---|---|
 | Embedding model | qwen3-embedding:0.6b (1024 d) | text-embedding-3-small (1536 d) |
 | Generation model | qwen2.5:3b-instruct | gpt-5-mini |
@@ -104,7 +139,7 @@ The same pipeline, the same queries, two providers. Selection is a single enviro
 
 ---
 
-## Architecture
+## 🏗️ Architecture
 
 ```mermaid
 flowchart TD
@@ -137,7 +172,7 @@ Relevance judgments are made at document level; retrieval returns chunks. Withou
 
 ---
 
-## Retrieval, decision by decision
+## 🔍 Retrieval, decision by decision
 
 **Dense retrieval.** Vectors are L2-normalised at load time, which turns cosine similarity into a plain dot product: the entire search is one matrix multiplication. `argpartition` selects the top k without sorting the full corpus.
 
@@ -151,7 +186,7 @@ Relevance judgments are made at document level; retrieval returns chunks. Withou
 
 ---
 
-## Grounding and guardrails
+## 🛡️ Grounding and guardrails
 
 ### The prompt enforces three rules
 
@@ -175,13 +210,13 @@ That failure produced the project's most useful finding. The uncited sentence wa
 
 ### Testing that the system knows when to stay silent
 
-Five questions the corpus cannot answer (passport renewal, the 2014 World Cup, Kubernetes ingress) are part of the evaluation set. Retrieval always returns something, even for a football question, because nearest-neighbour search has no notion of "nothing here is relevant". Detecting that is a property of the prompt and guardrails, not of retrieval.
+Five questions the corpus cannot answer (passport renewal, the 2014 World Cup, Kubernetes ingress) are part of the evaluation set. Detecting that nothing relevant was retrieved is a property of the prompt and guardrails, not of retrieval.
 
 The paired metric matters as much: **abstention on in-domain questions**. Without it, a 100% out-of-domain abstention rate proves nothing, since a system that refuses everything would also score 100%.
 
 ---
 
-## The measurement harness has been wrong, and that is documented
+## 🐛 The measurement harness has been wrong, and that is documented
 
 While comparing providers, the hosted model was reported with a 20% hallucination rate. Inspection showed every claim was in fact cited, using `[1,5,3]` and `[1][3][4]` grouping styles the guardrail regex did not recognise. The local model never used those styles, so the defect had stayed invisible.
 
@@ -191,15 +226,7 @@ Two things follow, and both are in the numbers above rather than hidden: a measu
 
 ---
 
-## Demo interface
-
-A single self-contained HTML page served by the API. No build step, no CDN, no web fonts, because a project that claims to run offline must have an interface that does too.
-
-The interaction that matters: clicking a `[n]` citation reveals the exact passage supporting that claim, so a reader verifies rather than trusts. Abstention is rendered as a first-class result, not an error. An answer containing no citation at all raises a visible warning, since that is the hallucination signal.
-
----
-
-## Engineering
+## ⚙️ Engineering
 
 **FastAPI** exposes `POST /ask` with the retrieved passages, per-stage timings and citation flags in the response. An answer without its sources is not auditable.
 
@@ -211,7 +238,7 @@ The interaction that matters: clicking a `[n]` citation reveals the exact passag
 
 ---
 
-## Project structure
+## 📁 Project structure
 
 ```
 src/
@@ -230,7 +257,7 @@ Every number in this README comes from a file in `results/`, and every figure is
 
 ---
 
-## Running it
+## 🚀 Running it
 
 ```bash
 cp .env.example .env
@@ -268,7 +295,7 @@ python -m scripts.plot_results                # regenerate figures
 
 ---
 
-## Limitations
+## ⚠️ Limitations
 
 Stated rather than omitted, because a benchmark whose limits are hidden is not a benchmark.
 
@@ -276,7 +303,7 @@ Stated rather than omitted, because a benchmark whose limits are hidden is not a
 
 **Fifteen questions is an indication, not a measurement.** Answer-level metrics need 30 to 50 questions to be statistically defensible. Retrieval metrics, on 323 queries with human judgments, are on much firmer ground.
 
-**The corpus is English and made of short abstracts,** which avoids the PDF parsing and OCR problems that dominate real deployments.
+**The corpus is public and made of short English abstracts,** which avoids the PDF parsing and OCR problems that dominate real deployments on private document sets.
 
 **Determinism is asymmetric.** Local generation runs at temperature 0 and reproduces exactly. The GPT-5 series accepts only its default temperature, so the Azure side is not strictly reproducible. This is a known asymmetry in the comparison.
 
@@ -284,7 +311,7 @@ Stated rather than omitted, because a benchmark whose limits are hidden is not a
 
 ---
 
-## What comes next
+## 🗺️ What comes next
 
 - Tests and CI running the metric and guardrail logic on every commit.
 - A larger answer-evaluation set, in the 30 to 50 question range.
@@ -293,7 +320,7 @@ Stated rather than omitted, because a benchmark whose limits are hidden is not a
 
 ---
 
-## Takeaways
+## 💡 Takeaways
 
 1. **The embedding model matters more than the retrieval strategy.** Hybrid search and reranking compensate for a weak embedder; with a strong one, the simplest configuration wins.
 2. **Requiring a citation on every claim is a hallucination detector,** not a formatting preference. A model that infers cannot cite.
