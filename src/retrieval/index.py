@@ -17,11 +17,11 @@ from pathlib import Path
 
 import numpy as np
 
-from src.embeddings import Embedder
+
 
 
 class VectorIndex:
-    def __init__(self, index_dir: Path, embedder: Embedder):
+    def __init__(self, index_dir: Path, embedder: "Embedder"):
         self.embedder = embedder
         self.matrix = np.load(index_dir / "embeddings.npy")
         self.meta = json.loads((index_dir / "chunk_ids.json").read_text())
