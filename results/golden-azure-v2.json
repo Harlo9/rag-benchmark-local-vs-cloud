@@ -1,0 +1,98 @@
+{
+  "tag": "azure-v2",
+  "summary": {
+    "coverage": 0.4864864864864865,
+    "absence_respect": 1.0,
+    "correct_refusal": 1.0,
+    "questions": 9,
+    "points_expected": 37,
+    "points_covered": 18
+  },
+  "records": [
+    {
+      "question": "does vitamin d reduce mortality",
+      "abstained": false,
+      "coverage": 0.6,
+      "missed": [
+        "the trials mostly involved elderly women, largely in institutions or dependent care",
+        "vitamin D3 combined with calcium increased the risk of nephrolithiasis"
+      ],
+      "answer": "Overall, vitamin D decreased mortality (RR 0.97, 95% confidence interval 0.94 to 1.00) in pooled randomized trials [4]. When different forms were assessed separately, only vitamin D3 significantly reduced mortality (RR 0.94, 95% CI 0.91 to 0.98) whereas vitamin D2, alfacalcidol, and calcitriol did not [4]."
+    },
+    {
+      "question": "is red meat linked to colorectal cancer",
+      "abstained": false,
+      "coverage": 0.4,
+      "missed": [
+        "summary RR 1.22 for highest versus lowest intake, and 1.14 per 100 g per day",
+        "risk increases roughly linearly up to about 140 g per day, then plateaus",
+        "proposed mechanisms include heterocyclic amines, polycyclic aromatic hydrocarbons, N-nitroso compounds and heme iron"
+      ],
+      "answer": "Yes\u2014high intake of red and processed meat is associated with increased risk of colorectal cancer [1,4]. Meta-analyses reported the risk increases approximately linearly up to about 140 g/day and gave summary RRs such as 1.17 per 100 g/day for fresh red meat and 1.18 per 50 g/day for processed meat, with an overall RR of 1.14 per 100 g/day increase [1,4]."
+    },
+    {
+      "question": "what is the effect of soy on breast cancer risk",
+      "abstained": false,
+      "coverage": 0.5,
+      "missed": [
+        "another study found reduced risk among premenopausal women, RR 0.57, and no significant association postmenopause",
+        "studies report no adverse effect of soy on breast cancer prognosis in survivors"
+      ],
+      "answer": "High soy consumption was associated with a lower breast cancer risk (OR 0.36, 95% CI 0.20\u20130.64 for highest vs lowest intake quartile) [1]. This protective effect was observed primarily among postmenopausal women (OR 0.08, 95% CI 0.03\u20130.22) and was reported to be inverse among postmenopausal women with ER+/PR+ tumors [1,3]. Another study reported that the highest soy protein consumption significantly reduced breast cancer risk (OR 0.38, 95% CI 0.17\u20130.86) [5]."
+    },
+    {
+      "question": "does coffee consumption affect liver disease",
+      "abstained": false,
+      "coverage": 0.6,
+      "missed": [
+        "the inverse association held regardless of sex, alcohol intake or hepatitis history",
+        "similar associations were found for boiled and filtered coffee"
+      ],
+      "answer": "In a prospective study of Finnish male smokers, coffee intake was inversely associated with incident liver cancer (RR per cup per day = 0.82) and mortality from chronic liver disease (RR = 0.55) [1]. A meta-analysis reported that any coffee consumption versus none was associated with about a 40% reduced risk of hepatocellular carcinoma and a summary RR of 0.80 per additional cup per day [2]. Among heavy alcohol consumers, coffee consumption exceeding four cups per day significantly reduced alcohol-induced elevations in serum gamma\u2011glutamyltransferase activity in men [5]."
+    },
+    {
+      "question": "is there a link between dairy and prostate cancer",
+      "abstained": false,
+      "coverage": 0.4,
+      "missed": [
+        "case-control meta-analysis found a stronger association, combined OR 1.68",
+        "a dose-response relationship was identified",
+        "proposed mechanism involves IGF-1 and steroid hormones present in milk"
+      ],
+      "answer": "Epidemiological analyses have linked dairy consumption to increased prostate cancer risk, including a meta-analysis reporting a summary RR of 1.13 (95% CI 1.02\u20131.24) for highest versus lowest milk consumption and a prospective finding of multivariate RR 1.26 for extreme quintiles (with the association for total dairy attenuated after adjusting for calcium) [2][3][1]. In vitro experiments showed cows' milk stimulated growth of LNCaP prostate cancer cells by over 30% in 14 experiments, although one report found a weak inverse association between high milk intake and prostate cancer risk (P for trend = 0.11) [4][5]."
+    },
+    {
+      "question": "what are the cardiovascular effects of omega 3",
+      "abstained": false,
+      "coverage": 0.75,
+      "missed": [
+        "no statistically significant association was observed with all-cause mortality"
+      ],
+      "answer": "Omega-3 fatty acids are reported to have beneficial effects on the risk of cardiovascular disease and are a reason dietary fish consumption is recommended [3]. Omega-3s may have an antiarrhythmic effect that could be important for men at high risk of sudden death [2]. A meta-analysis reported a small reduction in cardiovascular death that disappeared when a study with major methodological problems was excluded and concluded there is insufficient evidence that omega-3 supplements provide secondary prevention against overall cardiovascular events in patients with prior cardiovascular disease [4]."
+    },
+    {
+      "question": "does green tea help with weight loss",
+      "abstained": false,
+      "coverage": 0.5,
+      "missed": [
+        "the underlying mechanisms remain unclear and the role of caffeine is not established",
+        "high doses of tea polyphenols may have adverse side effects"
+      ],
+      "answer": "Laboratory studies have demonstrated the potential efficacy of green or black tea for the prevention of obesity, but the results of human intervention studies are mixed [1]. One passage reports that daily intake of green tea can significantly reduce body weight in obese people [3]."
+    },
+    {
+      "question": "are artificial sweeteners linked to diabetes",
+      "abstained": true,
+      "coverage": 0.0
+    },
+    {
+      "question": "what are the effects of dietary fiber on cholesterol",
+      "abstained": false,
+      "coverage": 0.5,
+      "missed": [
+        "water-soluble fibres showed higher in vitro binding capacity for cholesterol and bile acids than insoluble ones"
+      ],
+      "answer": "A cholesterol\u2011lowering dietary portfolio that included viscous fiber was associated with maintained reductions in LDL cholesterol (about \u221213.4%) and in the total/HDL cholesterol ratio (about \u221215.2%) [4].  \nIn one study, the protective effect of wheat fiber in cardiovascular disease could not be explained by wheat bran reducing serum cholesterol [1].  \nA flaxseed\u2011supplemented, low\u2011fat diet produced significant decreases in total serum cholesterol in men awaiting prostatectomy [3]."
+    }
+  ]
+}

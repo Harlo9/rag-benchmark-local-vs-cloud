@@ -1,0 +1,599 @@
+{
+  "tag": "local-triage",
+  "summary": {
+    "variants_tested": 30,
+    "false_abstention_rate": 0.43333333333333335,
+    "guardrail_break_rate": 0.03333333333333333,
+    "stable_rate": 0.5333333333333333,
+    "retrieval_overlap": 0.2733333333333333,
+    "by_style": {
+      "vague": {
+        "false_abstention": 7,
+        "guardrail_break": 1,
+        "stable": 2
+      },
+      "colloquial": {
+        "false_abstention": 6,
+        "guardrail_break": 0,
+        "stable": 4
+      },
+      "verbose": {
+        "false_abstention": 0,
+        "guardrail_break": 0,
+        "stable": 10
+      }
+    }
+  },
+  "records": [
+    {
+      "canonical": "does vitamin d reduce mortality",
+      "style": "vague",
+      "variant": "is vitamin d actually useful",
+      "verdict": "guardrail_break",
+      "doc_overlap": 1,
+      "base_docs": 4,
+      "question": "is vitamin d actually useful",
+      "abstained": false,
+      "guardrail_passed": false,
+      "doc_ids": [
+        "MED-3985",
+        "MED-4573",
+        "MED-714",
+        "MED-716",
+        "MED-921"
+      ],
+      "answer": "[2] Vitamin D, known as the sunshine vitamin, is actually a hormone. Once it is produced in the skin or ingested from the diet it is converted sequentially in the liver and kidneys to its biologically active form 1,25-dihydroxyvitamin D. This hormone interacts with its receptor in the small intestine to increase the efficiency of intestinal calcium and phosphate absorption for the maintenance of the skeleton throughout life."
+    },
+    {
+      "canonical": "does vitamin d reduce mortality",
+      "style": "colloquial",
+      "variant": "does vit D realy help peopl live longer",
+      "verdict": "false_abstention",
+      "doc_overlap": 2,
+      "base_docs": 4,
+      "question": "does vit D realy help peopl live longer",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-2506",
+        "MED-3452",
+        "MED-3990",
+        "MED-714",
+        "MED-921"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "does vitamin d reduce mortality",
+      "style": "verbose",
+      "variant": "my grandmother's doctor mentioned supplements last week and I was wondering whether taking vitamin D has any effect on how long people live",
+      "verdict": "stable",
+      "doc_overlap": 1,
+      "base_docs": 4,
+      "question": "my grandmother's doctor mentioned supplements last week and I was wondering whether taking vitamin D has any effect on how long people live",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-3990",
+        "MED-4573",
+        "MED-4930",
+        "MED-716",
+        "MED-921"
+      ],
+      "answer": "[1] Vitamin D supplementation for prevention of mortality in adults."
+    },
+    {
+      "canonical": "is red meat linked to colorectal cancer",
+      "style": "vague",
+      "variant": "is meat bad for you",
+      "verdict": "false_abstention",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "is meat bad for you",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-4200",
+        "MED-4205",
+        "MED-5034",
+        "MED-5035",
+        "MED-5235"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "is red meat linked to colorectal cancer",
+      "style": "colloquial",
+      "variant": "does eating red meat gives u colon cancer",
+      "verdict": "stable",
+      "doc_overlap": 3,
+      "base_docs": 5,
+      "question": "does eating red meat gives u colon cancer",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1045",
+        "MED-2584",
+        "MED-4487",
+        "MED-5035",
+        "MED-5326"
+      ],
+      "answer": "[4] High intake of red and processed meat is associated with significant increased risk of colorectal, colon and rectal cancers."
+    },
+    {
+      "canonical": "is red meat linked to colorectal cancer",
+      "style": "verbose",
+      "variant": "we had a family argument about barbecues and someone said red meat causes bowel cancer, is there evidence for that",
+      "verdict": "stable",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "we had a family argument about barbecues and someone said red meat causes bowel cancer, is there evidence for that",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1650",
+        "MED-5032",
+        "MED-5035",
+        "MED-5063",
+        "MED-5326"
+      ],
+      "answer": "[1] suggests that red and processed meat, specifically red meat, plays an unfavorable role in the risk of several cancers, including colorectal cancer. [5] further supports this by indicating that high consumers of cured meats and red meat are at increased risk of colorectal cancer."
+    },
+    {
+      "canonical": "what are the effects of dietary fiber on cholesterol",
+      "style": "vague",
+      "variant": "does fiber do anything",
+      "verdict": "false_abstention",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "does fiber do anything",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1038",
+        "MED-2099",
+        "MED-2293",
+        "MED-4359",
+        "MED-723"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "what are the effects of dietary fiber on cholesterol",
+      "style": "colloquial",
+      "variant": "whats fibre do to cholestrol",
+      "verdict": "false_abstention",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "whats fibre do to cholestrol",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1233",
+        "MED-1882",
+        "MED-2099",
+        "MED-4004",
+        "MED-4609"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "what are the effects of dietary fiber on cholesterol",
+      "style": "verbose",
+      "variant": "my nutritionist keeps telling me to eat more fibre and I want to understand what it actually changes about cholesterol levels",
+      "verdict": "stable",
+      "doc_overlap": 0,
+      "base_docs": 5,
+      "question": "my nutritionist keeps telling me to eat more fibre and I want to understand what it actually changes about cholesterol levels",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1233",
+        "MED-1447",
+        "MED-1890",
+        "MED-2291",
+        "MED-4087"
+      ],
+      "answer": "[1] Dietary cholesterol raises the ratio of total to HDL cholesterol and, therefore, adversely affects the cholesterol profile. The advice to limit cholesterol intake by reducing consumption of eggs and other cholesterol-rich foods may therefore still be valid. [5] Dietary fiber intake is significantly associated with lower risk of first stroke."
+    },
+    {
+      "canonical": "are artificial sweeteners linked to diabetes",
+      "style": "vague",
+      "variant": "are sweeteners risky",
+      "verdict": "false_abstention",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "are sweeteners risky",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1140",
+        "MED-4822",
+        "MED-5054",
+        "MED-5057",
+        "MED-5287"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "are artificial sweeteners linked to diabetes",
+      "style": "colloquial",
+      "variant": "is aspartame gonna give me diabetes",
+      "verdict": "false_abstention",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "is aspartame gonna give me diabetes",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1108",
+        "MED-1624",
+        "MED-1709",
+        "MED-4126",
+        "MED-4127"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "canonical": "are artificial sweeteners linked to diabetes",
+      "style": "verbose",
+      "variant": "I switched from sugar to sweeteners in my coffee two years ago and now I read they might be connected to diabetes, what does the research say",
+      "verdict": "stable",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "I switched from sugar to sweeteners in my coffee two years ago and now I read they might be connected to diabetes, what does the research say",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1627",
+        "MED-1707",
+        "MED-2397",
+        "MED-5054",
+        "MED-5249"
+      ],
+      "answer": "[3] suggests that frequent consumption of sweetened beverages, especially diet drinks, may increase depression risk among older adults. [4] does not support an association between DDE exposure and incident diabetes, but it does not address sweeteners. [5] discusses the potential toxicity of artificial sweeteners and their effects on glucose regulation. [1] discusses sugar-sweetened beverages and their association with diabetes, the metabolic syndrome, and cardiovascular disease. [2] is about coffee consumption and does not address sweeteners. [3] and [5] do not directly address your specific question about sweeteners and diabetes. [1] is the most relevant as it discusses sugar-sweetened beverages and their association with diabetes."
+    },
+    {
+      "canonical": "what is the effect of soy on breast cancer risk",
+      "style": "vague",
+      "variant": "is soy safe",
+      "verdict": "false_abstention",
+      "doc_overlap": 0,
+      "base_docs": 5,
+      "question": "is soy safe",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1140",
+        "MED-1745",
+        "MED-4882",
+        "MED-5055",
+        "MED-753"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "what is the effect of soy on breast cancer risk",
+      "style": "colloquial",
+      "variant": "does soya effect breast cancer",
+      "verdict": "stable",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "does soya effect breast cancer",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-2774",
+        "MED-4212",
+        "MED-4440",
+        "MED-5065",
+        "MED-753"
+      ],
+      "answer": "[1] [3] Soya foods may protect against the development of breast cancer, as evidenced by a 2-year soya intervention trial showing no significant effect on IGF-1 and IGFBP-3 levels. [3]"
+    },
+    {
+      "canonical": "what is the effect of soy on breast cancer risk",
+      "style": "verbose",
+      "variant": "a friend recovering from breast cancer was told to avoid tofu entirely and I would like to know whether soy consumption changes the risk",
+      "verdict": "stable",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "a friend recovering from breast cancer was told to avoid tofu entirely and I would like to know whether soy consumption changes the risk",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1254",
+        "MED-3127",
+        "MED-4440",
+        "MED-5002",
+        "MED-841"
+      ],
+      "answer": "[4] suggests that soy intake is associated with a significant reduced death risk of breast cancer in Chinese population. However, [1] states that there is no adverse effects of soy foods on breast cancer prognosis. Therefore, your friend should consider the specific context of soy consumption and breast cancer prognosis, as [4] provides evidence for a beneficial effect, while [1] indicates no adverse effects."
+    },
+    {
+      "canonical": "does coffee consumption affect liver disease",
+      "style": "vague",
+      "variant": "is coffee good or bad",
+      "verdict": "false_abstention",
+      "doc_overlap": 0,
+      "base_docs": 5,
+      "question": "is coffee good or bad",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1621",
+        "MED-1640",
+        "MED-1853",
+        "MED-4331",
+        "MED-5249"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "does coffee consumption affect liver disease",
+      "style": "colloquial",
+      "variant": "coffe and liver, good or no",
+      "verdict": "false_abstention",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "coffe and liver, good or no",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1621",
+        "MED-2160",
+        "MED-4713",
+        "MED-5158",
+        "MED-897"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "does coffee consumption affect liver disease",
+      "style": "verbose",
+      "variant": "I drink four cups a day and my last blood test showed elevated liver enzymes, is there a documented link between coffee and liver disease",
+      "verdict": "stable",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "I drink four cups a day and my last blood test showed elevated liver enzymes, is there a documented link between coffee and liver disease",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-2156",
+        "MED-2158",
+        "MED-2160",
+        "MED-2161",
+        "MED-4365"
+      ],
+      "answer": "[1] Inverse associations of coffee consumption with liver disease and mortality persisted in those without diabetes, HBV- and HCV-negative cases, and in analyses stratified by age, body mass index, alcohol and smoking dose."
+    },
+    {
+      "canonical": "is there a link between dairy and prostate cancer",
+      "style": "vague",
+      "variant": "is milk a problem",
+      "verdict": "false_abstention",
+      "doc_overlap": 0,
+      "base_docs": 5,
+      "question": "is milk a problem",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-2061",
+        "MED-2489",
+        "MED-3087",
+        "MED-4394",
+        "MED-4398"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "is there a link between dairy and prostate cancer",
+      "style": "colloquial",
+      "variant": "does drinkin milk cause prostrate cancer",
+      "verdict": "false_abstention",
+      "doc_overlap": 3,
+      "base_docs": 5,
+      "question": "does drinkin milk cause prostrate cancer",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-2136",
+        "MED-2772",
+        "MED-2774",
+        "MED-2775",
+        "MED-5359"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "is there a link between dairy and prostate cancer",
+      "style": "verbose",
+      "variant": "my father was recently diagnosed and someone in the waiting room claimed dairy was involved, what do the studies actually show",
+      "verdict": "stable",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "my father was recently diagnosed and someone in the waiting room claimed dairy was involved, what do the studies actually show",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1148",
+        "MED-1773",
+        "MED-2053",
+        "MED-4752",
+        "MED-5196"
+      ],
+      "answer": "[1] shows a link between dairy consumption and conditions such as acne, breast cancer, and prostate cancer, involving hormones like Insulin-like Growth Factor-1 and steroid hormones present in milk. [4] suggests a potential link between dairy consumption and an increased risk of Parkinson's disease, particularly in men."
+    },
+    {
+      "canonical": "what are the cardiovascular effects of omega 3",
+      "style": "vague",
+      "variant": "are fish oils worth it",
+      "verdict": "false_abstention",
+      "doc_overlap": 0,
+      "base_docs": 5,
+      "question": "are fish oils worth it",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1831",
+        "MED-2750",
+        "MED-2751",
+        "MED-2907",
+        "MED-4936"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "what are the cardiovascular effects of omega 3",
+      "style": "colloquial",
+      "variant": "omega3 good for the heart or nah",
+      "verdict": "false_abstention",
+      "doc_overlap": 3,
+      "base_docs": 5,
+      "question": "omega3 good for the heart or nah",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-2754",
+        "MED-4791",
+        "MED-5026",
+        "MED-5179",
+        "MED-839"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "what are the cardiovascular effects of omega 3",
+      "style": "verbose",
+      "variant": "the pharmacy sells omega 3 capsules at the counter with a heart symbol on the box and I want to know what effect they actually have on the cardiovascular system",
+      "verdict": "stable",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "the pharmacy sells omega 3 capsules at the counter with a heart symbol on the box and I want to know what effect they actually have on the cardiovascular system",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-2752",
+        "MED-3427",
+        "MED-4559",
+        "MED-5179",
+        "MED-945"
+      ],
+      "answer": "[1] [3] Omega-3 fatty acids, particularly those found in ALA, have been shown to have an antiarrhythmic effect and may contribute to a hypotensive effect, which may account for part of their cardioprotective effect."
+    },
+    {
+      "canonical": "does green tea help with weight loss",
+      "style": "vague",
+      "variant": "does tea burn fat",
+      "verdict": "stable",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "does tea burn fat",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-4331",
+        "MED-4713",
+        "MED-4776",
+        "MED-5046",
+        "MED-5253"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "does green tea help with weight loss",
+      "style": "colloquial",
+      "variant": "green tea for loosing weight, works?",
+      "verdict": "stable",
+      "doc_overlap": 3,
+      "base_docs": 5,
+      "question": "green tea for loosing weight, works?",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-3206",
+        "MED-3489",
+        "MED-4776",
+        "MED-4780",
+        "MED-5048"
+      ],
+      "answer": "[2] suggests that fresh grapefruit, when eaten before meals, is associated with significant weight loss. [4] indicates that an herbal mixture of Ma Huang and Guarana, when used as active treatment, promotes short-term weight and fat loss."
+    },
+    {
+      "canonical": "does green tea help with weight loss",
+      "style": "verbose",
+      "variant": "I keep seeing green tea extract in every fat burner on the shelf and I want to know whether it does anything for weight loss",
+      "verdict": "stable",
+      "doc_overlap": 2,
+      "base_docs": 5,
+      "question": "I keep seeing green tea extract in every fat burner on the shelf and I want to know whether it does anything for weight loss",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-3489",
+        "MED-4251",
+        "MED-4365",
+        "MED-4776",
+        "MED-939"
+      ],
+      "answer": "[1] and [4] discuss green tea extract in the context of fat burners. [1] highlights potential adverse effects, while [4] suggests green tea extract can promote short-term weight and fat loss without significant adverse effects."
+    },
+    {
+      "canonical": "does fasting improve insulin sensitivity",
+      "style": "vague",
+      "variant": "is fasting healthy",
+      "verdict": "stable",
+      "doc_overlap": 0,
+      "base_docs": 5,
+      "question": "is fasting healthy",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1466",
+        "MED-1617",
+        "MED-2489",
+        "MED-4287",
+        "MED-898"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "does fasting improve insulin sensitivity",
+      "style": "colloquial",
+      "variant": "does skipin meals help with insuline",
+      "verdict": "stable",
+      "doc_overlap": 0,
+      "base_docs": 5,
+      "question": "does skipin meals help with insuline",
+      "abstained": true,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1466",
+        "MED-1517",
+        "MED-1534",
+        "MED-1612",
+        "MED-3812"
+      ],
+      "answer": "INSUFFICIENT_CONTEXT: The question seems to be about this corpus, but it is phrased too broadly to retrieve precise evidence. Try naming the specific substance, condition or outcome you have in mind."
+    },
+    {
+      "canonical": "does fasting improve insulin sensitivity",
+      "style": "verbose",
+      "variant": "I have been doing 16 8 intermittent fasting for three months and I want to understand its effect on insulin sensitivity",
+      "verdict": "stable",
+      "doc_overlap": 1,
+      "base_docs": 5,
+      "question": "I have been doing 16 8 intermittent fasting for three months and I want to understand its effect on insulin sensitivity",
+      "abstained": false,
+      "guardrail_passed": true,
+      "doc_ids": [
+        "MED-1465",
+        "MED-1517",
+        "MED-1879",
+        "MED-2410",
+        "MED-3813"
+      ],
+      "answer": "[1] In the lipid infusion protocol described, there is no mention of intermittent fasting or its effects on insulin sensitivity. [5] discusses the effects of flaxseed intake on insulin sensitivity, but does not address intermittent fasting. [4] does not provide information relevant to intermittent fasting. [3] discusses cinnamon's effects on insulin sensitivity, but is not related to intermittent fasting. [2] is about the effects of regular activity breaks on postprandial glycemia and insulinemia, which is not relevant to intermittent fasting. [1] discusses the effects of glucose infusion rate and insulin sensitivity, but does not address intermittent fasting. [3] discusses cinnamon's effects on insulin sensitivity, but is not related to intermittent fasting. Therefore, based on the provided passages, there is insufficient information to answer the question about the effect of 16/8 intermittent fasting on insulin sensitivity. [1]"
+    }
+  ]
+}

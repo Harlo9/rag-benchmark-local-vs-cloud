@@ -1,0 +1,148 @@
+{
+  "variant": "local-llama8b",
+  "summary": {
+    "hallucination_rate": 0.0,
+    "guardrail_pass": 1.0,
+    "faithfulness": 0.9791666666666667,
+    "abstention_rate_ood": 1.0,
+    "abstention_rate_in_domain": 0.2,
+    "median_latency_s": 14.0
+  },
+  "records": [
+    {
+      "question": "does vitamin d reduce mortality",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "[Vitamin D supplementation for prevention of mortality in adults.] [2] Vitamin D(3) seems to decrease mortality in predominantly elderly women who are mainly in institutions and dependent care. [2] Vitamin D(2), alfacalcidol, and calcitriol had no statistically significant effect on mortality."
+    },
+    {
+      "question": "is red meat linked to colorectal cancer",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 0.8333333333333334,
+      "answer": "Yes, red meat is linked to colorectal cancer [1]. The risk of colorectal cancer increases approximately linearly with increasing intake of red and processed meats up to approximately 140 g/day [2]. High intake of red and processed meat is associated with a significant increased risk of colorectal, colon, and rectal cancers [2]."
+    },
+    {
+      "question": "what are the effects of dietary fiber on cholesterol",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Regular consumption of dietary fiber, particularly fiber from cereal sources, may improve CVD health through multiple mechanisms including lipid reduction [1]. The hypocholesterolemic effects were similar for both animal and soy protein while on the experimental diet [2]. The fibre component is necessary for the cholesterol-lowering effect of apples in healthy humans [4]."
+    },
+    {
+      "question": "does green tea help with weight loss",
+      "in_domain": true,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "are artificial sweeteners linked to diabetes",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "[1] Artificial sweeteners have been linked to various health concerns, including diabetes, but the relationship is still debated among scientists. [1] These substances have been associated with effects on glucose regulation, which may be relevant to diabetes. [1]\n\nHowever, there is no direct evidence in the provided passages that artificial sweeteners are linked to diabetes."
+    },
+    {
+      "question": "what is the effect of soy on breast cancer risk",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "[1] Our study is the third epidemiologic study to report no adverse effects of soy foods on breast cancer prognosis, and these studies provide the necessary epidemiologic evidence that clinicians no longer need to advise against soy consumption for women with a diagnosis of breast cancer. [2] Soy intake during childhood, adolescence, and adult life was associated with decreased breast cancer risk, with the strongest, most consistent effect for childhood intake. [3] Our findings suggest that high consumption of soy might be related to lower risk of breast cancer."
+    },
+    {
+      "question": "does coffee consumption affect liver disease",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "[1] Drinking coffee may have benefits for the liver, irrespective of whether coffee was boiled or filtered [1]. Inverse associations between coffee consumption and liver disease were observed, including reduced risk of mortality from chronic liver disease (RR=0.55, 95% CI: 0.48\u20130.63; P-trend<0.0001) [1]. Similar associations were found in various subgroups, including those without diabetes, HBV- and HCV-negative cases, and in analyses stratified by age, body mass index, alcohol and smoking dose [1]."
+    },
+    {
+      "question": "is there a link between dairy and prostate cancer",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "Yes, several studies suggest a link between dairy consumption and increased risk of prostate cancer. [1] states that \"The results from this large prospective study suggest that intake of calcium or some related component contained in dairy foods is associated with increased prostate cancer risk.\" [2] also mentions a \"potent link\" between dairy intake and prostate cancer, suggesting that insulin-like Growth Factor-1 (IGF-1) and steroid hormones present in milk may be contributing factors. [3] found a strong correlation between milk consumption and prostate cancer mortality, with a correlation coefficient of 0.766. [4] proposes that high dairy consumption may lead to increased mTORC1 signaling, which may have adverse effects on prostate health. [5] conducted a meta-analysis of case-control studies and found a combined odds ratio of 1.68 between milk consumption and prostate cancer."
+    },
+    {
+      "question": "what are the cardiovascular effects of omega 3",
+      "in_domain": true,
+      "abstained": false,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": 1.0,
+      "answer": "[1] Our meta-analysis showed insufficient evidence of a secondary preventive effect of omega-3 fatty acid supplements against overall cardiovascular events among patients with a history of cardiovascular disease. [1] There was a small reduction in cardiovascular death (relative risk, 0.91; 95% CI, 0.84-0.99), which disappeared when we excluded a study with major methodological problems. [1]\n\n[2] These findings suggest that higher intake of green leafy vegetables may reduce the risk of cardiovascular disease through favorable changes in cardiac autonomic function. [2]\n\n[3] We observed a hypotensive effect of ALA, which may constitute another mechanism accounting in part for the apparent cardioprotective effect of this n-3 fatty acid. [3]\n\n[5] Previously established hypotriglyceridemic and anti-inflammatory effects of omega-3 PUFAs were seen also in this study. [5]"
+    },
+    {
+      "question": "does fasting improve insulin sensitivity",
+      "in_domain": true,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT"
+    },
+    {
+      "question": "how do I renew my french passport",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT: Nothing in this corpus addresses that question. The corpus covers nutrition and health research only."
+    },
+    {
+      "question": "who won the 2014 football world cup",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT: Nothing in this corpus addresses that question. The corpus covers nutrition and health research only."
+    },
+    {
+      "question": "what is the capital of mongolia",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT: Nothing in this corpus addresses that question. The corpus covers nutrition and health research only."
+    },
+    {
+      "question": "how do I configure a kubernetes ingress",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT: Nothing in this corpus addresses that question. The corpus covers nutrition and health research only."
+    },
+    {
+      "question": "what is the population of Lisbon",
+      "in_domain": false,
+      "abstained": true,
+      "guardrail_passed": true,
+      "uncited_claims": 0,
+      "faithfulness": null,
+      "answer": "INSUFFICIENT_CONTEXT: Nothing in this corpus addresses that question. The corpus covers nutrition and health research only."
+    }
+  ]
+}

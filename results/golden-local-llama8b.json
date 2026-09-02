@@ -1,0 +1,106 @@
+{
+  "tag": "local-llama8b",
+  "summary": {
+    "coverage": 0.43243243243243246,
+    "absence_respect": 1.0,
+    "correct_refusal": 1.0,
+    "questions": 9,
+    "points_expected": 37,
+    "points_covered": 16
+  },
+  "records": [
+    {
+      "question": "does vitamin d reduce mortality",
+      "abstained": false,
+      "coverage": 0.4,
+      "missed": [
+        "only vitamin D3 decreased mortality significantly, RR 0.94 (95% CI 0.91 to 0.98)",
+        "vitamin D2, alfacalcidol and calcitriol had no statistically significant effect",
+        "vitamin D3 combined with calcium increased the risk of nephrolithiasis"
+      ],
+      "answer": "Yes, vitamin D(3) seems to decrease mortality in predominantly elderly women who are mainly in institutions and dependent care [1]. Overall, vitamin D decreased mortality (RR 0.97, 95% confidence interval (CI) 0.94 to 1.00, I(2) = 0%) [4]."
+    },
+    {
+      "question": "is red meat linked to colorectal cancer",
+      "abstained": false,
+      "coverage": 0.6,
+      "missed": [
+        "risk increases roughly linearly up to about 140 g per day, then plateaus",
+        "fresh red meat RR 1.17 per 100 g per day, processed meat RR 1.18 per 50 g per day"
+      ],
+      "answer": "[1] High intake of red and processed meat is associated with significant increased risk of colorectal, colon and rectal cancers. [1] The overall evidence of prospective studies supports limiting red and processed meat consumption as one of the dietary recommendations for the prevention of colorectal cancer. [1] \n\n[2] An increased risk for colorectal cancer has been consistently reported for long-time consumption of cooked and processed red meat. [2] The geographic epidemiology of colorectal cancer seems to correspond to regions with a high rate of beef consumption. [2] \n\n[3] Positive associations between red processed meat and proximal colon cancer and pan-fried red meat and colorectal cancer were found. [3] HCAs, PAHs, nitrites, and nitrates may be involved in colorectal cancer etiology. [3] \n\n[4] Processed meat intake may be involved in the etiology of colorectal cancer, and the excess risk per gram of intake is clearly higher than that of fresh red meat. [4] Several hypotheses may explain why processed meat intake is linked to cancer risk, including the formation of carcinogenic compounds during cooking. [4] \n\n[5] Red and processed meats intake was associated with increased colorectal cancer risk, with a summary relative risk (RR) of 1.22 (95% CI = 1.11\u22121.34) for the highest versus the lowest intake. [5]"
+    },
+    {
+      "question": "what is the effect of soy on breast cancer risk",
+      "abstained": false,
+      "coverage": 0.25,
+      "missed": [
+        "one study found the protective effect only among postmenopausal women, OR 0.08",
+        "another study found reduced risk among premenopausal women, RR 0.57, and no significant association postmenopause",
+        "studies report no adverse effect of soy on breast cancer prognosis in survivors"
+      ],
+      "answer": "A significant inverse association between soy intake and breast cancer risk was found, with a dose-response relationship [1]. The protective effect was observed only among postmenopausal women [1]. Suggestive trends for a reduced risk of cancer recurrence were observed with increasing quintiles of daidzein and glycetin intake compared to no intake among postmenopausal women [2]."
+    },
+    {
+      "question": "does coffee consumption affect liver disease",
+      "abstained": false,
+      "coverage": 0.6,
+      "missed": [
+        "the inverse association held regardless of sex, alcohol intake or hepatitis history",
+        "similar associations were found for boiled and filtered coffee"
+      ],
+      "answer": "Coffee consumption has been associated with reduced risk of liver cancer and chronic liver disease mortality [1]. A meta-analysis of 16 studies found that high coffee consumption was associated with a 50% reduced risk of liver cancer [5]. Coffee consumption also modulates the effect of ethanol on serum GGT activities in a dose- and gender-dependent manner [3]."
+    },
+    {
+      "question": "is there a link between dairy and prostate cancer",
+      "abstained": false,
+      "coverage": 0.2,
+      "missed": [
+        "case-control meta-analysis found a stronger association, combined OR 1.68",
+        "a dose-response relationship was identified",
+        "proposed mechanism involves IGF-1 and steroid hormones present in milk",
+        "cow's milk stimulated growth of LNCaP prostate cancer cells in vitro by over 30 percent"
+      ],
+      "answer": "Yes, there is a link between dairy and prostate cancer [1]. A meta-analysis of cohort studies found a positive association between milk consumption and prostate cancer risk, with a summary relative risk of 1.13 [2]. Another meta-analysis of case-control studies found a combined odds ratio of 1.68 [4]."
+    },
+    {
+      "question": "what are the cardiovascular effects of omega 3",
+      "abstained": false,
+      "coverage": 0.25,
+      "missed": [
+        "a small reduction in cardiovascular death was observed, RR 0.91",
+        "that reduction disappeared once a methodologically flawed study was excluded",
+        "the meta-analysis found insufficient evidence of a secondary preventive effect on cardiovascular events"
+      ],
+      "answer": "[1] No statistically significant association was observed with all-cause mortality, cardiac death, sudden death, myocardial infarction, and stroke. [1] No statistically significant association was observed with all-cause mortality, cardiac death, sudden death, myocardial infarction, and stroke. [4] There was a small reduction in cardiovascular death (relative risk, 0.91; 95% CI, 0.84-0.99)."
+    },
+    {
+      "question": "does green tea help with weight loss",
+      "abstained": false,
+      "coverage": 0.75,
+      "missed": [
+        "high doses of tea polyphenols may have adverse side effects"
+      ],
+      "answer": "[1] Laboratory, epidemiological, and human intervention studies show that tea (Camellia sinensis) may be useful in the prevention of obesity [1]. However, the results of human intervention studies are mixed, and the role of caffeine has not been clearly established [1]."
+    },
+    {
+      "question": "are artificial sweeteners linked to diabetes",
+      "abstained": false,
+      "coverage": 0.6666666666666666,
+      "missed": [
+        "these substances have received increased attention for their effects on glucose regulation"
+      ],
+      "answer": "[1] Artificial sweeteners provide the sweetness of sugar without the calories. [1] These choices may be beneficial for those who cannot tolerate sugar in their diets (e.g., diabetics). [1] However, scientists disagree about the relationships between sweeteners and various health conditions, including diabetes."
+    },
+    {
+      "question": "what are the effects of dietary fiber on cholesterol",
+      "abstained": false,
+      "coverage": 0.0,
+      "missed": [
+        "water-soluble fibres showed higher in vitro binding capacity for cholesterol and bile acids than insoluble ones",
+        "a dietary portfolio including viscous fibre reduced LDL cholesterol by about 13 percent"
+      ],
+      "answer": "[1] The study found a 13+/-4% reduction in serum triglycerides, but it does not specifically state the effects of dietary fiber on cholesterol. However, it concludes that the protective effect of wheat fiber in cardiovascular disease cannot be explained by an effect of wheat bran in reducing serum cholesterol. [2] This passage shows that water-soluble dietary fibers have a higher binding capacity for cholesterol compared to water-insoluble dietary fibers."
+    }
+  ]
+}
