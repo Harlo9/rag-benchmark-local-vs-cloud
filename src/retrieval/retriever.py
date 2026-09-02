@@ -9,7 +9,6 @@ the ablation table possible: same harness, one variable at a time.
 from dataclasses import dataclass
 from pathlib import Path
 
-from src.embeddings import Embedder
 from src.retrieval.bm25 import BM25Index
 from src.retrieval.fusion import reciprocal_rank_fusion
 from src.retrieval.index import VectorIndex
@@ -26,9 +25,10 @@ class Hit:
 
 
 class Retriever:
-    def __init__(self, index_dir: Path, chunks_path: Path, embedder: Embedder,
+    def __init__(self, index_dir: Path, chunks_path: Path, embedder: "Embedder",
                  strategy: str = "dense", rerank: bool = False,
                  candidates: int = 50, diversify: bool = False):
+
         self.strategy = strategy
         self.candidates = candidates
         self.diversify = diversify
