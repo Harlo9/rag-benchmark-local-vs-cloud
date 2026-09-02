@@ -15,6 +15,10 @@ from src.retrieval.index import VectorIndex
 from src.retrieval.store import ChunkStore
 import numpy as np 
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.embeddings import Embedder
 @dataclass
 class Hit:
     chunk_id: str

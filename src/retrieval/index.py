@@ -17,7 +17,9 @@ from pathlib import Path
 
 import numpy as np
 
-
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.embeddings import Embedder
 
 
 class VectorIndex:
