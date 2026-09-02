@@ -17,11 +17,16 @@ import numpy as np
 
 
 def mmr_select(query_vec: np.ndarray, cand_vecs: np.ndarray, k: int,
-               lambda_: float = 0.7) -> list[int]:
-    """Return indices of k candidates, greedily balancing relevance and novelty."""
-    relevance = cand_vecs @ query_vec          # vectors are already normalised
-    similarity = cand_vecs @ cand_vecs.T       # pairwise similarity between candidates
+               lambda_: float = 0.7, relevance: np.ndarray | None = None) -> list[int]:
+    """Return indices of k candidates, greedily balancing relevance and novelty.
 
+    `relevance` overrides the dense cosine score. This matters when a reranker
+    ran first: without it, MMR re-ranks on dense similarity and silently discards
+    the cross-encoder's ordering, which is the more accurate of the two.
+    """
+    if relevance is None:
+        relevance = cand_vecs @ query_vec
+    similarity = cand_vecs @ cand_vecs.T
     selected: list[int] = [int(np.argmax(relevance))]
 
     while len(selected) < min(k, len(cand_vecs)):

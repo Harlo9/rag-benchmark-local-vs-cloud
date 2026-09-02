@@ -14,7 +14,7 @@ from src.retrieval.bm25 import BM25Index
 from src.retrieval.fusion import reciprocal_rank_fusion
 from src.retrieval.index import VectorIndex
 from src.retrieval.store import ChunkStore
-
+import numpy as np 
 
 @dataclass
 class Hit:
@@ -63,14 +63,26 @@ class Retriever:
             h["text"] = self.store.text(h["chunk_id"])
 
         if self.reranker:
-            raw = self.reranker.rerank(query, raw, top_k=k)
+            # Return more than k when diversification follows, otherwise MMR has
+            # nothing left to choose from.
+            keep = self.candidates if self.diversify else k
+            raw = self.reranker.rerank(query, raw, top_k=keep)
 
         if self.diversify and self.dense is not None and len(raw) > k:
-            # Applied after reranking: relevance first, then break up duplicates.
             from src.retrieval.mmr import mmr_select
             qv = self.dense.embed_query(query)
             cv = self.dense.vectors_for([h["chunk_id"] for h in raw])
-            raw = [raw[i] for i in mmr_select(qv, cv, k=k)]
+
+            # After reranking, relevance comes from the cross-encoder, not from
+            # cosine similarity: otherwise MMR discards the reranking entirely.
+            rel = None
+            if self.reranker:
+                scores = np.array([h["score"] for h in raw], dtype=np.float32)
+                # Cross-encoder scores are unbounded logits; MMR mixes relevance
+                # and redundancy additively, so both must share a scale.
+                rel = (scores - scores.min()) / (np.ptp(scores) or 1.0)
+
+            raw = [raw[i] for i in mmr_select(qv, cv, k=k, relevance=rel)]
         elif not self.diversify:
             raw = raw[:k]
         
