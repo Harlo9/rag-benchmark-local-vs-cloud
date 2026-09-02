@@ -1,0 +1,61 @@
+# Continuous integration.
+#
+# What runs here is the logic that produces every number in the README: metrics,
+# guardrails, fusion, diversification. Three defects in this code shipped
+# unnoticed during development, each one silently distorting results rather than
+# crashing, which is exactly the failure mode tests catch and eyeballing does not.
+#
+# What deliberately does NOT run here: the evaluation itself. It needs Ollama,
+# 25 GB of models and half an hour of compute. GitHub runners have none of that.
+# The pure logic is testable, the pipeline is not, and pretending otherwise would
+# produce a green badge that means nothing.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      # Only what the tested modules need. Installing the full requirements
+      # would pull torch and sentence-transformers, minutes of download for
+      # code these tests never reach.
+      - name: Install test dependencies
+        run: pip install pytest numpy rank-bm25
+
+      - name: Run tests
+        run: pytest -v
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ruff
+        run: pip install ruff
+      # Syntax and obvious mistakes only, not style opinions.
+      - name: Check
+        run: ruff check src/ scripts/ tests/ --select E9,F63,F7,F82
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # Proves the image still builds and that requirements.txt is complete,
+      # which is the part most likely to rot silently.
+      - name: Build image
+        run: docker build -t rag-api .
