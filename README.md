@@ -47,6 +47,16 @@ Retrieval always returns something, even for a question about football, because 
 
 ---
 
+## ⚡ TL;DR
+
+- **Lexical search beat semantic search** on this medical corpus: BM25 scored 0.302 nDCG@10 against 0.285 for dense retrieval, running 14 times faster.
+- **A well-chosen local model matches the hosted one.** llama3.1:8b reached 0.98 faithfulness against 0.97 for gpt-5-mini, at zero marginal cost and with no data leaving the machine.
+- **Grounding comes from the system, completeness comes from the model.** Zero uncited claims across every model tested; coverage of expected answer points ranged from 0.19 to 0.49 on the same prompt and the same passages.
+- **Two plausible improvements failed and are reported as such.** A retrieval confidence threshold cut unsupported claims to 3.3% but refused 43.3% of answerable questions.
+- **Three bugs in the measurement harness produced plausible wrong numbers.** All three are now regression tests running in CI.
+
+---
+
 ## 🎯 The problem
 
 Most organisations that would benefit from an internal AI assistant cannot use one, for two reasons that have nothing to do with model quality:
